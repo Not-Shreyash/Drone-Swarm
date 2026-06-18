@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drone Swarm - About Us</title>
+    <style>
+        :root {
+            --sidebar-bg: #111111;
+            --sidebar-text: #aaaaaa;
+            --sidebar-hover: #ffffff;
+            --sidebar-active: #388e3c;
+            --content-bg: #ffffff;
+            --text-color: #333333;
+            --header-bg: #0d233a;
+            --border-color: #dddddd;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            background-color: var(--content-bg);
+            color: var(--text-color);
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            overflow-y: auto;
+            box-sizing: border-box;
+            padding: 20px 0;
+            border-right: 1px solid #222;
+        }
+
+        .logo-container {
+            padding: 0 20px 20px 20px;
+            text-align: center;
+            border-bottom: 1px solid #222;
+        }
+
+        .logo-placeholder {
+            background: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #000;
+            display: inline-block;
+            letter-spacing: 1px;
+        }
+
+        .menu-section {
+            padding: 15px 20px 5px 20px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 10px 20px;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar a:hover {
+            color: var(--sidebar-hover);
+            background-color: #1a1a1a;
+        }
+
+        .sidebar a.active {
+            color: #fff;
+            background-color: #1e1e1e;
+            border-left: 4px solid var(--sidebar-active);
+            font-weight: bold;
+        }
+
+        /* Main Body Content */
+        .main-container {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-header {
+            background-color: var(--header-bg);
+            color: white;
+            padding: 25px 40px;
+        }
+
+        .top-header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .top-header p {
+            margin: 5px 0 0 0;
+            color: #a0b2c6;
+            font-size: 0.95rem;
+        }
+
+        .content-body {
+            padding: 40px;
+            max-width: 950px;
+            line-height: 1.6;
+        }
+
+        h2 {
+            color: var(--header-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+            margin-top: 10px;
+            margin-bottom: 25px;
+        }
+
+        /* Mentor Premium Card */
+        .mentor-section {
+            margin-bottom: 40px;
+        }
+
+        .mentor-card {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-left: 5px solid #388e3c;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 400px;
+        }
+
+        /* Team Grid Layout */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .member-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: transform 0.2s ease;
+        }
+
+        .member-card:hover {
+            transform: translateY(-3px);
+            border-color: #b2c2d4;
+        }
+
+        .member-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #1a202c;
+            margin: 0 0 5px 0;
+        }
+
+        .member-roll {
+            font-size: 0.95rem;
+            color: #4a5568;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <div class="logo-placeholder">DRONE SWARM</div>
+        </div>
+        
+        <div class="menu-section">Navigation</div>
+        <a href="about.html" class="active">About Us</a>
+        <a href="ProDro.html">Drone Statics</a>
+    </div>
+
+    <!-- Main Workspace -->
+    <div class="main-container">
+        <div class="top-header">
+            <h1>About Our Team</h1>
+            
+        </div>
+
+        <div class="content-body">
+            
+            <!-- Mentor Section -->
+            <div class="mentor-section">
+                <h2>Project Mentor</h2>
+                <div class="mentor-card">
+                    <div class="member-name" style="font-size: 1.25rem; color: #0d233a;">Krish Jain</div>
+                    <div class="member-roll" style="margin-top: 4px; font-weight: 500; color: #388e3c;">Roll No: B24EE1097</div>
+                </div>
+            </div>
+
+            <!-- Team Members Section -->
+            <h2>Team Members</h2>
+            <div class="team-grid">
+
+                <!-- 1. Anuj Dhaked -->
+                <div class="member-card">
+                    <div class="member-name">Anuj Dhaked</div>
+                    <div class="member-roll">Roll No: B25CI1006</div>
+                </div>
+
+                <!-- 2. Manish Kumar Singh -->
+                <div class="member-card">
+                    <div class="member-name">Manish Kumar Singh</div>
+                    <div class="member-roll">Roll No: G25AIT2059</div>
+                </div>
+
+                <!-- 3. Narapati Venkata Charan Teja -->
+                <div class="member-card">
+                    <div class="member-name">Narapati Venkata Charan Teja</div>
+                    <div class="member-roll">Roll No: B25ME1048</div>
+                </div>
+
+                <!-- 4. Nirgunadatta Venkatesh -->
+                <div class="member-card">
+                    <div class="member-name">Nirgunadatta Venkatesh</div>
+                    <div class="member-roll">Roll No: B25CY1010</div>
+                </div>
+
+                <!-- 5. Ritu Bhosale -->
+                <div class="member-card">
+                    <div class="member-name">Ritu Bhosale</div>
+                    <div class="member-roll">Roll No: B25ME1013</div>
+                </div>
+
+                <!-- 6. Saswata Naiya -->
+                <div class="member-card">
+                    <div class="member-name">Saswata Naiya</div>
+                    <div class="member-roll">Roll No: B25EE1034</div>
+                </div>
+
+                <!-- 7. Shivam Mehta -->
+                <div class="member-card">
+                    <div class="member-name">Shivam Mehta</div>
+                    <div class="member-roll">Roll No: B25ME1072</div>
+                </div>
+
+                <!-- 8. Shreyash Vishwakarma -->
+                <div class="member-card">
+                    <div class="member-name">Shreyash Vishwakarma</div>
+                    <div class="member-roll">Roll No: B25BB1033</div>
+                </div>
+
+                <!-- 9. Tamanna -->
+                <div class="member-card">
+                    <div class="member-name">Tamanna</div>
+                    <div class="member-roll">Roll No: B25MT1044</div>
+                </div>
+
+                <!-- 10. Vedant Kulkarni -->
+                <div class="member-card">
+                    <div class="member-name">Vedant Kulkarni</div>
+                    <div class="member-roll">Roll No: B25ME1082</div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
