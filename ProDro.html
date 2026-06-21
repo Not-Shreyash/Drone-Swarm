@@ -125,6 +125,23 @@
             margin-top: 30px;
             margin-bottom: 15px;
         }
+
+        /* --- ADDED CSS FOR DIAGRAMS & HIGHLIGHTS --- */
+        p { margin-bottom: 15px; text-align: justify; }
+        ul { margin-left: 20px; margin-bottom: 15px; }
+        li { margin-bottom: 8px; }
+
+        .diagram-container { display: flex; justify-content: center; align-items: center; margin: 30px 0; padding: 20px; background: #fafafa; border: 1px solid #ddd; border-radius: 8px; }
+        .diagram-box { background: white; border: 2px solid #0d233a; border-radius: 8px; padding: 15px 25px; font-weight: bold; text-align: center; position: relative; width: 150px; }
+        .diagram-arrow { display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 20px; font-size: 12px; color: #555; }
+        .arrow-line { width: 60px; height: 2px; background: #0d233a; position: relative; margin: 5px 0; }
+        .arrow-line::after { content: ''; position: absolute; right: 0; top: -4px; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 5px solid #0d233a; }
+        .arrow-line-reverse { width: 60px; height: 2px; background: #0d233a; position: relative; margin: 5px 0; }
+        .arrow-line-reverse::before { content: ''; position: absolute; left: 0; top: -4px; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-right: 5px solid #0d233a; }
+        
+        .caption { text-align: center; font-size: 13px; color: #666; margin-top: 10px; font-style: italic; margin-bottom: 30px; }
+        .highlight-box { background: #e8f4f8; border-left: 4px solid #0d233a; padding: 15px; margin: 20px 0; border-radius: 4px; }
+        
     </style>
     <!-- MathJax for rendering math equations later -->
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -151,7 +168,61 @@
 
         <div class="content-body" id="drone-statics">
             
+            <p>The core objective of this project is to build, simulate, and physically deploy a coordinated setup for three nano-drones. The swarm must follow specific flight paths while holding a steady formation relative to each other.</p>
+            <p>This initiative bridges abstract mathematical models with physical hardware. The transition from basic SolidWorks frame modeling to implementing complex algorithms in C++ ensures that abstract principles are grounded in reality. When setting up decentralized control loops using a k-NN topology, precise vector mapping is paramount. For example, ensuring a vector field phase term is accurately targeted in the z-direction (e.g., k√3/2z) rather than the y-direction prevents the entire multi-drone formation from destabilizing during motion capture tracking.</p>
+
+            <div class="highlight-box">
+                <strong>The Domino Effect:</strong> Because their motions rely on what the other drones are doing, a single drone getting knocked off course—from sensor noise or a draft of wind—can cause a ripple effect that disrupts the entire formation. This is where adaptive algorithms like Reinforcement Learning become crucial.
+            </div>
+
+            <h2>Reinforcement Learning (RL) Foundations</h2>
+            <p>Reinforcement Learning (RL) is a subfield of Artificial Intelligence (AI) that focuses on training autonomous agents to make decisions by interacting with their environment to maximize cumulative rewards. Unlike supervised learning, RL deals with agents that must make intuitive decisions and learn from trial-and-error exploration.</p>
             
+            <p>The learning process revolves around several key components:</p>
+            <ul>
+                <li><strong>State (S):</strong> A specific condition or configuration of the environment (e.g., the current 3D coordinates of the drone).</li>
+                <li><strong>Action (A):</strong> The possible moves the drone can make, such as altering its pitch, roll, or thrust.</li>
+                <li><strong>Reward (R):</strong> Evaluative feedback that differentiates positive events (maintaining formation) from negative events (colliding or drifting).</li>
+                <li><strong>Policy (π):</strong> The strategy that maps perceived states to actions, guiding the agent's behavior.</li>
+            </ul>
+
+            <div class="diagram-container">
+                <div class="diagram-box">Agent<br><span style="font-size:11px;font-weight:normal;">(Drone Flight Controller)</span></div>
+                
+                <div style="display:flex; flex-direction:column; align-items:center;">
+                    <div class="diagram-arrow">
+                        <span>Action (A<sub>t</sub>)</span>
+                        <div class="arrow-line"></div>
+                    </div>
+                    <div style="height:40px;"></div>
+                    <div class="diagram-arrow">
+                        <div class="arrow-line-reverse"></div>
+                        <span>State (S<sub>t+1</sub>) & Reward (R<sub>t+1</sub>)</span>
+                    </div>
+                </div>
+
+                <div class="diagram-box">Environment<br><span style="font-size:11px;font-weight:normal;">(Physical Space & Physics)</span></div>
+            </div>
+            <div class="caption">Figure 1: The standard Reinforcement Learning interaction loop.</div>
+
+            <h2>Bridging RL with Drone Swarms</h2>
+            <p>In the context of multi-drone formation control, the environment's dynamics are modeled as a Markov Decision Process (MDP), which provides a framework for sequential decision-making.</p>
+            
+            <p>Our approach utilizes Guidance Vector Fields (GVFs) combined with Artificial Potential Fields (APFs). The target flight path acts as an attractive force, while a "repulsive shield" surrounds each drone to prevent collisions. Integrating RL allows the drones to optimize these potential fields dynamically.</p>
+
+            <p>While Value-based methods like Q-Learning estimate the expected return of an action, continuous control tasks like drone flight heavily benefit from <strong>Policy-based methods</strong> or <strong>Hybrid (Actor-Critic) methods</strong>. Algorithms such as Proximal Policy Optimization (PPO) directly adjust policy parameters, making them highly effective for high-dimensional action spaces and stable attitude control in UAVs.</p>
+
+            <div class="diagram-container" style="gap: 15px;">
+                <div style="width: 80px; height: 80px; border-radius: 50%; border: 2px dashed #e74c3c; display: flex; justify-content: center; align-items: center; background: #fadbd8; font-weight: bold; font-size: 12px; text-align: center;">Drone 1<br>(Repel)</div>
+                <div style="width: 100px; height: 2px; background: #999; position: relative;"></div>
+                <div style="width: 80px; height: 80px; border-radius: 50%; border: 2px dashed #3498db; display: flex; justify-content: center; align-items: center; background: #d6eaf8; font-weight: bold; font-size: 12px; text-align: center;">Drone 2<br>(Attract)</div>
+                <div class="arrow-line" style="width: 80px; background: #27ae60;"></div>
+                <div style="width: 80px; height: 80px; border-radius: 8px; border: 2px solid #27ae60; display: flex; justify-content: center; align-items: center; background: #d5f5e3; font-weight: bold; font-size: 12px; text-align: center;">Target<br>Trajectory</div>
+            </div>
+            <div class="caption">Figure 2: Representation of Artificial Potential Fields (APFs) guiding decentralized swarm logic.</div>
+
+            <h2>Next Steps</h2>
+            <p>Before physical deployment, the control logic will be rigorously tested in 3D simulation environments like Gazebo. Following successful simulations, the logic will be transferred to real hardware, leveraging an indoor motion capture system as a high-precision positioning tool to close the feedback loop and maintain rigid swarm formations.</p>
 
         </div>
     </div>
