@@ -168,7 +168,20 @@
         .media video {
             width: 500px;
             height: auto;
-}
+        }
+        .img-left {
+            float: left;
+            width: 250px;
+            margin-right: 20px;
+            margin-bottom: 10px;
+        }
+
+        .img-right {
+            float: right;
+            width: 250px;
+            margin-left: 20px;
+            margin-bottom: 10px;
+        }
     </style>
     <!-- MathJax for rendering math equations later -->
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -470,6 +483,8 @@
 
     <h3>Working Principle</h3>
 
+    <img src="images/gyro.jpg" class="img-right" style="width:400px;">
+
     <p>
         Modern MEMS gyroscopes contain vibrating structures.
     </p>
@@ -536,6 +551,7 @@
     </ul>
 
     <h3>Role in Drones</h3>
+    <img src="images/accelerometer.jpg" class="img-right" style="width:200px;">
 
     <p>Used for:</p>
 
@@ -558,17 +574,13 @@
 
     <h3>What is a Barometer?</h3>
 
-                    <div class="image-placeholder">
-        <img src="images/atm_graph.png" class = img-right style="width:400px;"
-     alt="graph"
-     width="700">
-    </div>
-
     <p>
         A barometer measures atmospheric pressure.
     </p>
 
     <h3>Working Principle</h3>
+
+     <img src="images/atm_graph.png" class="img-right" style="width:400px;">
 
     <p>
         Air pressure decreases with altitude.
@@ -577,62 +589,28 @@
     <p>By measuring pressure:</p>
 
     <ul>
-        <li><strong>Positive (Stable) Pitch Stability:</strong> When the angle of attack increases, a restoring moment is automatically formed and thus the drone returns to its original altitude.</li>
-        <li><strong>Neutral Pitch Stability:</strong> The change in the altitude is maintained and there is no coming back to the original state.</li>
-        <li><strong>Pitch Instability:</strong> This is a state of instability because the increase in the altitude caused by the disturbance, just keeps on increasing without regaining its original state.</li>
+        <li>Altitude can be estimated</li>
+    </ul>
+
+    <h3>Role in Drones</h3>
+
+    <p>Used for:</p>
+
+    <ul>
+        <li>Altitude hold</li>
+        <li>Autonomous missions</li>
+        <li>Vertical positioning</li>
+    </ul>
+
+    <h3>Advantages</h3>
+
+    <ul>
+        <li>Low cost</li>
+        <li>Reliable altitude estimation</li>
     </ul>
 </section>
-<section ID="GPS">
-    <h2>4. GPS</h2>
-
-    <h3>What is GPS?</h3>
-        <img src="images/gps_shematic.bmp" class = img-right style="width:400px;"
-     alt="gps work flow"
-     width="700">
-    
-
-    <p>
-        Global Positioning System helps determine geographical location.
-    </p>
-
-    <h3>Working Principle</h3>
-<div class="image-placeholder">
 
 
-
-    <p>
-        GPS receivers receive signals from multiple satellites.
-    </p>
-
-    <p>Using triangulation:</p>
-
-    <ul>
-        <li>Latitude</li>
-        <li>Longitude</li>
-        <li>Altitude</li>
-    </ul>
-
-    <p>are calculated.</p>
-
-    <h3>Role in Drone Swarms</h3>
-
-      <img src="images/gps_module.jpg" class = img-right style="width:150px; margin-right:100px"
-     alt="gps"
-     width="700">
-
-    <ul>
-        <li>Autonomous navigation</li>
-        <li>Waypoint missions</li>
-        <li>Return-to-home</li>
-    </ul>
-
-    <h3>Limitations</h3>
-
-    <ul>
-        <li>Weak indoors</li>
-        <li>Affected by obstacles</li>
-    </ul>
-</section>
 
 </body>
 </html>
