@@ -252,6 +252,15 @@
     border-left: 2px solid white;
     transform: translateX(-50%);
 }
+.formula-box {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 15px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
     </style>
     <!-- MathJax for rendering math equations later -->
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -896,6 +905,78 @@
     <ul>
         <li>Autonomous navigation</li>
         <li>Swarm collision avoidance</li>
+    </ul>
+</section>
+<section id="ULTRASONIC SENSOR">
+    <h2>9. Ultrasonic Sensors</h2>
+
+    <h3>Working Principle</h3>
+
+    <ol>
+        <li>Sensor emits ultrasonic pulse.</li>
+        <li>Pulse hits obstacle.</li>
+        <li>Echo returns.</li>
+        <li>Distance is calculated.</li>
+    </ol>
+
+    <h3>Formula</h3>
+
+    <div class="formula-box">
+        Distance = (Speed of Sound × Time) / 2
+    </div>
+
+    <img src="images/ultrasonic.webp" class="img-right" style="width:300px;margin-right: 100px;">
+
+    <h3>Advantages</h3>
+
+    
+
+    <ul>
+        <li>Cheap</li>
+        <li>Reliable</li>
+        <li>Easy integration</li>
+    </ul>
+
+    <h3>Limitations</h3>
+
+    <ul>
+        <li>Limited range</li>
+    </ul>
+</section>
+<section id="ToF">
+    <h2>10. Time of Flight (ToF) Sensors</h2>
+
+     <img src="images/tof.jpg" class="img-right" style="width:450px;margin-right: 100px;">
+
+    <h3>What is ToF?</h3>
+
+    <p>
+        ToF sensors measure distance using light.
+    </p>
+
+    <h3>Working Principle</h3>
+
+    <ol>
+        <li>Infrared light is emitted.</li>
+        <li>Light reflects from object.</li>
+        <li>Return time is measured.</li>
+        <li>Distance is calculated.</li>
+    </ol>
+
+    <h3>Advantages</h3>
+
+    <ul>
+        <li>Higher accuracy</li>
+        <li>Longer range</li>
+        <li>Faster measurements</li>
+    </ul>
+
+    <h3>Applications</h3>
+
+    <ul>
+        <li>Obstacle avoidance</li>
+        <li>Indoor navigation</li>
+        <li>Precision hovering</li>
     </ul>
 </section>
 
