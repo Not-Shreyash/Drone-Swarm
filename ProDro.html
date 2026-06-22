@@ -182,6 +182,76 @@
             margin-left: 20px;
             margin-bottom: 10px;
         }
+        .imu-diagram {
+             text-align: center;
+             margin: 20px 0;
+        }
+
+        .imu-box {
+            display: inline-block;
+            padding: 10px 25px;
+            border: 2px solid #2ee60e;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .imu-components {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .imu-components div {
+            border: 1px solid #e41212;
+            padding: 8px 15px;
+            border-radius: 5px;
+        }
+        .imu-tree {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.imu-parent {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.vertical-line {
+    height: 40px;
+    width: 0;
+    border-left: 3px solid white;   /* use a visible color */
+    margin: 0 auto;
+}
+
+.horizontal-line {
+    width: 300px;
+    border-top: 3px solid white;
+    margin: 0 auto;
+}
+
+.imu-children {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 10px;
+}
+
+.imu-children div {
+    position: relative;
+}
+
+.imu-children div::before {
+    content: "";
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    width: 0;
+    height: 12px;
+    border-left: 2px solid white;
+    transform: translateX(-50%);
+}
     </style>
     <!-- MathJax for rendering math equations later -->
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -737,6 +807,44 @@
     <ul>
         <li>High accuracy</li>
         <li>Fast measurements</li>
+    </ul>
+</section>
+<section class="sensor-section">
+    <h2>7. Inertial Measurement Unit (IMU)</h2>
+
+    <h3>What is an IMU?</h3>
+
+    <img src="images/imu_diagram.png" style = "width:400px;" >
+
+     <h4>Functions</h4>
+     <img src="images/imu.png" class="img-right" style="width:400px;margin-right: 100px;">
+
+    <p>Provides:</p>
+
+    <ul>
+        <li>Orientation</li>
+        <li>Velocity estimation</li>
+        <li>Position estimation</li>
+    </ul>
+   
+
+    <h3>Role in Drone Swarms</h3>
+
+    <p>
+        IMU is the backbone of drone navigation.
+    </p>
+
+    <h3>Advantages</h3>
+
+    <ul>
+        <li>Works without GPS</li>
+        <li>High reliability</li>
+    </ul>
+
+    <h3>Limitations</h3>
+
+    <ul>
+        <li>Drift accumulates over time</li>
     </ul>
 </section>
 
