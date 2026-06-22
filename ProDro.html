@@ -261,6 +261,38 @@
     border: 1px solid #ccc;
     border-radius: 5px;
 }
+.sensor-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.sensor-table th,
+.sensor-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+
+.sensor-table th {
+    font-weight: bold;
+}
+.conclusion-box {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin: 20px 0;
+}
+
+.conclusion-box h3 {
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.conclusion-box ul {
+    margin-left: 20px;
+    margin-bottom: 15px;
+}
     </style>
     <!-- MathJax for rendering math equations later -->
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -978,6 +1010,113 @@
         <li>Indoor navigation</li>
         <li>Precision hovering</li>
     </ul>
+</section>
+<section id="sensor fusion">
+
+    <h2>Sensor Fusion in Drone Swarms</h2>
+
+    <h3>What is Sensor Fusion?</h3>
+
+    <p>
+        Combining data from multiple sensors to improve accuracy.
+    </p>
+
+    <h3>EXAMPLE</h3>
+
+    <table class="sensor-table">
+        <thead>
+            <tr>
+                <th>Sensor</th>
+                <th>Provides</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Gyroscope</td>
+                <td>Rotation</td>
+            </tr>
+            <tr>
+                <td>Accelerometer</td>
+                <td>Motion</td>
+            </tr>
+            <tr>
+                <td>GPS</td>
+                <td>Position</td>
+            </tr>
+            <tr>
+                <td>Magnetometer</td>
+                <td>Heading</td>
+            </tr>
+            <tr>
+                <td>Barometer</td>
+                <td>Altitude</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>WHY SENSOR FUSION IS REQUIRED?</h3>
+
+    <p>
+        A single sensor can fail.
+    </p>
+
+    <p>
+        Combining sensors provides:
+    </p>
+
+    <ul>
+        <li>Better accuracy</li>
+        <li>Robust navigation</li>
+        <li>Reliable swarm operation</li>
+    </ul>
+
+</section>
+<section class="sensor-section">
+
+    <h2>Conclusion</h2>
+
+    <p>
+        A drone is the result of the seamless integration of mechanical,
+        electrical, and software systems.
+    </p>
+
+    <div class="conclusion-box">
+
+        <h3>Mechanical System</h3>
+
+        <ul>
+            <li>Provides the physical structure of the drone.</li>
+            <li>Includes the frame, propellers, motors, landing gear, and body.</li>
+            <li>Generates lift, thrust, and overall flight movement.</li>
+        </ul>
+
+        <h3>Electrical System</h3>
+
+        <ul>
+            <li>Acts as the sensing and control backbone.</li>
+            <li>Includes sensors, GPS, communication modules, memory, and power electronics.</li>
+            <li>Collects environmental data and enables intelligent decision-making.</li>
+        </ul>
+
+        <h3>Working Together</h3>
+
+        <ul>
+            <li>Sensors observe the drone's surroundings and motion.</li>
+            <li>Controllers process sensor data and calculate corrections.</li>
+            <li>Motors respond instantly to maintain stable flight.</li>
+            <li>Sensor fusion improves navigation accuracy and reliability.</li>
+        </ul>
+
+    </div>
+
+    <p>
+        In modern drone swarm systems, the combination of robust mechanical
+        design and intelligent electronic sensing enables stable flight,
+        autonomous navigation, obstacle avoidance, and coordinated swarm
+        operation. Together, these technologies form the foundation of
+        next-generation unmanned aerial systems.
+    </p>
+
 </section>
 
 
