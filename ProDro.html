@@ -166,7 +166,7 @@
 
         .media img,
         .media video {
-            width: 500px;
+            width: 400px;
             height: auto;
         }
         .img-left {
@@ -809,7 +809,7 @@
         <li>Fast measurements</li>
     </ul>
 </section>
-<section class="sensor-section">
+<section id="IMU">
     <h2>7. Inertial Measurement Unit (IMU)</h2>
 
     <h3>What is an IMU?</h3>
@@ -845,6 +845,57 @@
 
     <ul>
         <li>Drift accumulates over time</li>
+    </ul>
+</section>
+<section id="obstrucle avoidance">
+    <h2>8. Obstacle Avoidance Sensors</h2>
+
+     <div class="media">
+    <video autoplay loop muted playsinline>
+        <source src="videos/obstracle_avoidance.mp4" type="video/mp4" style ="height:100px;" >
+    </video>
+</div>
+
+    <h3>Why Obstacle Avoidance?</h3>
+
+    <p>
+        Drones must avoid:
+    </p>
+
+    <ul>
+        <li>Trees</li>
+        <li>Buildings</li>
+        <li>Poles</li>
+        <li>Other drones</li>
+    </ul>
+
+    <h3>Technologies Used</h3>
+
+    <h4>1. Stereo Vision</h4>
+    <p>
+        Uses two cameras to estimate depth.
+    </p>
+
+    <h4>2. Ultrasonic Sensors</h4>
+    <p>
+        Use sound waves.
+    </p>
+
+    <h4>3. Infrared Sensors</h4>
+    <p>
+        Use infrared light.
+    </p>
+
+    <h4>4. ToF Sensors</h4>
+    <p>
+        Use laser-based distance measurement.
+    </p>
+
+    <h3>Applications</h3>
+
+    <ul>
+        <li>Autonomous navigation</li>
+        <li>Swarm collision avoidance</li>
     </ul>
 </section>
 
