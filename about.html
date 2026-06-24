@@ -173,6 +173,70 @@
             font-size: 0.95rem;
             color: #4a5568;
         }
+        @media screen and (max-width: 768px) {
+
+            body {
+                display: block;
+            }
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .main-container {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .content-body,
+            .top-header {
+                padding: 15px;
+            }
+
+            img,
+            video {
+                max-width: 100%;
+                height: auto;
+            }
+
+            .media {
+                float: none;
+                margin: 15px auto;
+                text-align: center;
+            }
+
+            .media img,
+            .media video,
+            .img-left,
+            .img-right {
+                width: 100%;
+                max-width: 100%;
+                float: none;
+                margin: 10px auto;
+                display: block;
+            }
+
+            .equilibrium-section {
+                flex-direction: column;
+            }
+
+            .horizontal-line {
+                width: 100%;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+        mjx-container[jax="CHTML"][display="true"] {
+            overflow-x: auto;
+            overflow-y: hidden;
+            max-width: 100%;
+        }
     </style>
 </head>
 <body>
