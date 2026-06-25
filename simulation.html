@@ -273,6 +273,18 @@
             font-size: 14px;
             margin-bottom: 25px;
         }
+
+        .video-container {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .sim-video {
+            width: 100%;
+            max-width: 900px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
     </style>
 </head>
 
@@ -813,6 +825,24 @@
                 ↓<br>
                 <strong>Fully Orchestrated Simulation Active!</strong>
             </div>
+            <h2>Takeoff and Landing Demonstration</h2>
+
+            <p>
+                This video demonstrates the X500 drone performing a complete takeoff and landing sequence
+                in the PX4 SITL and Gazebo Harmonic simulation environment.
+            </p>
+
+            <div class="video-container">
+                <video class="sim-video" controls>
+                    <source src="videos/takeoff_and_landing_video.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+
+            <p class="image-caption">
+                Figure 8: PX4 SITL X500 drone takeoff and landing demonstration.
+            </p>
+
 
         </div>
     </div>
