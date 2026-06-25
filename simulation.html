@@ -97,6 +97,125 @@
 
         .content-body {
             padding: 40px;
+            max-width: 900px;
+        }
+
+        /* Documentation & Content Element Styling */
+        .content-body h2 {
+            border-bottom: 1px solid #eaecef;
+            padding-bottom: 0.3em;
+            margin-top: 30px;
+            color: #24292e;
+        }
+        .content-body h3 {
+            margin-top: 24px;
+            color: #24292e;
+        }
+        .content-body p, .content-body ul, .content-body ol {
+            margin-top: 0;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+        .content-body ul {
+            padding-left: 2em;
+        }
+        .content-body li {
+            margin-bottom: 4px;
+        }
+        .command-container {
+            position: relative;
+            background-color: #1c1e21;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .command-container pre {
+            margin: 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            width: 100%;
+        }
+        .command-container code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            color: #f0f6fc;
+            font-size: 14px;
+        }
+        .copy-btn {
+            background-color: #30363d;
+            color: #c9d1d9;
+            border: 1px solid #f0f6fc26;
+            border-radius: 6px;
+            padding: 5px 10px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            margin-left: 12px;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .copy-btn:hover {
+            background-color: #8b949e;
+            color: #101214;
+        }
+        .explanation-box {
+            background-color: #f6f8fa;
+            border-left: 0.25em solid #0366d6;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            border-radius: 0 6px 6px 0;
+        }
+        .explanation-box p {
+            margin: 0;
+            font-weight: 600;
+            font-size: 14px;
+            color: #586069;
+        }
+        .explanation-box ul {
+            margin: 8px 0 0 0;
+            padding-left: 20px;
+            font-size: 14px;
+        }
+        table {
+            border-spacing: 0;
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 0;
+            margin-bottom: 16px;
+        }
+        table th, table td {
+            padding: 6px 13px;
+            border: 1px solid #dfe2e5;
+        }
+        table tr {
+            background-color: #fff;
+            border-top: 1px solid #c6cbd1;
+        }
+        table tr:nth-child(2n) {
+            background-color: #f6f8fa;
+        }
+        .architecture-box {
+            background-color: #f6f8fa;
+            padding: 18px;
+            border-radius: 6px;
+            border: 1px solid #e1e4e8;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #24292e;
+            margin-bottom: 16px;
+        }
+        .workflow {
+            background-color: #f6f8fa;
+            padding: 20px;
+            border-radius: 6px;
+            border: 1px solid #e1e4e8;
+            font-family: monospace;
+            text-align: center;
+            line-height: 1.8;
         }
 
         @media screen and (max-width: 768px) {
@@ -120,7 +239,6 @@
 
 <body>
 
-    <!-- Sidebar Navigation -->
     <div class="sidebar">
         <div class="logo-container">
             <div class="logo-placeholder">DRONE SWARM</div>
@@ -133,7 +251,6 @@
         <a href="simulation.html" class="active">Simulation Setup</a>
     </div>
 
-    <!-- Main Workspace -->
     <div class="main-container">
 
         <div class="top-header">
@@ -141,10 +258,508 @@
         </div>
 
         <div class="content-body">
-            <!-- Blank page -->
-        </div>
+            
+            <h2>1. Introduction</h2>
+            <p>Windows Subsystem for Linux (WSL) allows users to run a Linux environment directly inside Windows without installing a virtual machine or dual booting. This step-by-step guide walks you through the comprehensive setup of a fully functional autonomous drone development suite.</p>
+            <p><strong>This guide covers:</strong></p>
+            <ul>
+                <li>Installing WSL2 and Ubuntu distributions</li>
+                <li>Managing and configuring environment versions</li>
+                <li>Installing PX4 Autopilot & Software-In-The-Loop (SITL) dependencies</li>
+                <li>Setting up Gazebo Harmonic simulation environments</li>
+                <li>Installing ROS 2 Jazzy Jalisco on Ubuntu 24.04 LTS</li>
+                <li>Deploying QGroundControl (QGC) as the Ground Control Station</li>
+            </ul>
 
+            <hr style="border: 0; border-top: 1px solid #eaecef; margin: 24px 0;">
+
+            <h2>2. Install WSL2</h2>
+            <p>Open PowerShell as an Administrator and execute the following initialization command:</p>
+            <div class="command-container">
+                <pre><code>wsl --install</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            <div class="explanation-box">
+                <p>Explanation:</p>
+                <ul>
+                    <li>Enables the core WSL feature within Windows.</li>
+                    <li>Installs the required Linux kernel configured for WSL2 framework performance.</li>
+                    <li>Downloads and provisions a default Ubuntu distribution.</li>
+                    <li>Configures WSL2 globally as your default environment version.</li>
+                </ul>
+            </div>
+            <p><em>Note: Restart your computer when prompted after structural installation finishes.</em></p>
+
+            <h2>3. Install a Specific Ubuntu Version</h2>
+            <p>To explicitly target Ubuntu 24.04 LTS (required for compatibility with ROS 2 Jazzy), run:</p>
+            <div class="command-container">
+                <pre><code>wsl --install -d Ubuntu-24.04</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            <div class="explanation-box">
+                <p>Explanation:</p>
+                <ul>
+                    <li>Downloads and deploys the independent Ubuntu 24.04 LTS container profile.</li>
+                    <li>Leverages the existing local WSL engine architecture.</li>
+                    <li>Safely bypasses reinstalling underlying WSL operational layers.</li>
+                </ul>
+            </div>
+
+            <h2>4. Verify Installation</h2>
+            <p>Check your installed distributions, active states, and environment engine versioning:</p>
+            <div class="command-container">
+                <pre><code>wsl -l -v</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            <div class="explanation-box">
+                <p>Explanation:</p>
+                <ul>
+                    <li>Lists all registered Linux instances currently living in the host environment.</li>
+                    <li>Displays the real-time operational status (Running/Stopped).</li>
+                    <li>Identifies whether the distribution uses WSL1 or WSL2.</li>
+                </ul>
+            </div>
+            <h3>Example Output</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>NAME</th>
+                        <th>STATE</th>
+                        <th>VERSION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Ubuntu</td>
+                        <td>Stopped</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>Ubuntu-24.04</td>
+                        <td>Running</td>
+                        <td>2</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>5. Set WSL2 as Default</h2>
+            <p>Ensure that all future distribution installations use the modern WSL2 virtualization engine:</p>
+            <div class="command-container">
+                <pre><code>wsl --set-default-version 2</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            <div class="explanation-box">
+                <p>Explanation: Restricts future imports or additions from falling back to older WSL1 layers.</p>
+            </div>
+
+            <h2>6. Launch Ubuntu</h2>
+            <p>Open a standard PowerShell environment and initialize the subsystem:</p>
+            <div class="command-container">
+                <pre><code>wsl</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            <div class="explanation-box">
+                <p>Explanation: Instantly executes the shell environment inside whatever distribution is set as your default configuration.</p>
+            </div>
+
+            <h3>6.1 Navigate to Home Directory</h3>
+            <p>When Ubuntu boots straight via PowerShell integration, it often maps into a mounted Windows system directory pathway such as:</p>
+            <div class="command-container">
+                <pre><code>/mnt/c/Windows/System32</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            <p><strong>CRITICAL:</strong> Before cloning code repositories, creating documents, or generating operational scripts, switch to your native Linux home partition. Working inside Windows system mounts degrades compilation performance and risks file system permission blockages!</p>
+            <div class="command-container">
+                <pre><code>cd ~</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            <p>Verify your explicit directory location:</p>
+            <div class="command-container">
+                <pre><code>pwd</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            <p>Expected Target Output:</p>
+            <div class="command-container">
+                <pre><code>/home/&lt;username&gt;</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            <div class="explanation-box">
+                <p>Explanation: The tilde character (<code>~</code>) indicates the native Linux user environment partition where PX4, ROS 2, and code packages should live.</p>
+            </div>
+
+            <h2>7. Check Installed Ubuntu Versions</h2>
+            <div class="command-container">
+                <pre><code>wsl -l -v</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            <h3>Example Multi-Distribution Output</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>NAME</th>
+                        <th>STATE</th>
+                        <th>VERSION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Ubuntu-22.04</td>
+                        <td>Stopped</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>Ubuntu-24.04</td>
+                        <td>Running</td>
+                        <td>2</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>8. Run a Specific Ubuntu Version</h2>
+            <p>If you maintain multiple operational instances, launch a specific environment direct target:</p>
+            <div class="command-container">
+                <pre><code>wsl -d Ubuntu-24.04</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+
+            <h2>9. Run the Default Ubuntu Version</h2>
+            <div class="command-container">
+                <pre><code>wsl</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+
+            <h2>10. Set a Default Ubuntu Version</h2>
+            <p>Make Ubuntu 24.04 the automatic target configuration anytime the generic <code>wsl</code> boot command executes:</p>
+            <div class="command-container">
+                <pre><code>wsl --set-default Ubuntu-24.04</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+
+            <h2>11. Understanding the WSL Structure</h2>
+            <p>The system architectural layer operates cleanly under the following structural framework:</p>
+            
+            <div class="architecture-box">
+                <strong>Windows Host System</strong><br>
+                └── <strong>WSL2 Engine Runtime</strong> (Virtualization Core Layer)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;├── <strong>Ubuntu 22.04 Environment</strong> (Isolated Subsystem Instance)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;└── <strong>Ubuntu 24.04 Environment</strong> (Active Development Subsystem Instance)
+            </div>
+
+            <h2>12. Key Commands Summary</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Task Target Description</th>
+                        <th>Functional Operational Command</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Install WSL Core Engine</td>
+                        <td><code>wsl --install</code></td>
+                    </tr>
+                    <tr>
+                        <td>Install Ubuntu 24.04 Distribution</td>
+                        <td><code>wsl --install -d Ubuntu-24.04</code></td>
+                    </tr>
+                    <tr>
+                        <td>List Active & Extant Environments</td>
+                        <td><code>wsl -l -v</code></td>
+                    </tr>
+                    <tr>
+                        <td>Run Default Configured Environment</td>
+                        <td><code>wsl</code></td>
+                    </tr>
+                    <tr>
+                        <td>Run Explicit Distribution Targeted Instance</td>
+                        <td><code>wsl -d Ubuntu-24.04</code></td>
+                    </tr>
+                    <tr>
+                        <td>Set Target Distribution as Environment Default</td>
+                        <td><code>wsl --set-default Ubuntu-24.04</code></td>
+                    </tr>
+                    <tr>
+                        <td>Set Engine Globally to Version 2</td>
+                        <td><code>wsl --set-default-version 2</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <hr style="border: 0; border-top: 1px solid #eaecef; margin: 24px 0;">
+
+            <h2>13. Install PX4 Autopilot</h2>
+            <p>PX4 is an advanced, open-source flight control software environment built for operating autonomous drones and robotic vehicles. It features full Software-In-The-Loop (SITL) simulation support allowing verification testing in virtual environments without deployment hardware risk.</p>
+            
+            <h3>13.1 Update Ubuntu Packages</h3>
+            <div class="command-container">
+                <pre><code>sudo apt update && sudo apt upgrade -y</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+
+            <h3>13.2 Install Required Development Tools</h3>
+            <div class="command-container">
+                <pre><code>sudo apt install -y git python3-pip python3-jinja2 python3-empy python3-toml python3-numpy python3-dev python3-setuptools python3-wheel build-essential</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            <div class="explanation-box">
+                <p>Explanation: Deploys essential compilers, internal build tools, and mathematical Python libraries needed for source-level tool compilation.</p>
+            </div>
+
+            <h3>13.3 Clone the PX4 Repository</h3>
+            <div class="command-container">
+                <pre><code>cd ~ && git clone https://github.com/PX4/PX4-Autopilot.git --recursive</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            <div class="explanation-box">
+                <p>Explanation: The recursive flag pulls down the core framework source architecture along with its nested open-source submodules simultaneously.</p>
+            </div>
+
+            <h3>13.4 Navigate to PX4 Directory</h3>
+            <div class="command-container">
+                <pre><code>cd ~/PX4-Autopilot</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+
+            <h3>13.5 Install PX4 Dependencies</h3>
+            <p>Run the automated distribution provisioning environment configurations script:</p>
+            <div class="command-container">
+                <pre><code>bash Tools/setup/ubuntu.sh</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            <div class="explanation-box">
+                <p>Explanation: Automatically downloads toolchains, required simulation dependencies, and supplementary development libraries.</p>
+            </div>
+            <p><em>Note: Restart your Ubuntu subsystem instance once this execution setup script terminates successfully.</em></p>
+
+            <h2>14. Build PX4 SITL</h2>
+            <div class="command-container">
+                <pre><code>cd ~/PX4-Autopilot && make px4_sitl</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            <div class="explanation-box">
+                <p>Explanation: Compiles the core target firmware files inside an isolated functional state optimized for pure software loop testing.</p>
+            </div>
+
+            <h2>15. Install Gazebo Harmonic</h2>
+            <p>Gazebo Harmonic models physics calculations, vehicle sensor feedback, atmospheric wind influences, and complex collision properties.</p>
+            
+            <p>Update local repository indexes:</p>
+            <div class="command-container">
+                <pre><code>sudo apt update</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+
+            <p>Install the physics engine software suite:</p>
+            <div class="command-container">
+                <pre><code>sudo apt install gz-harmonic -y</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+
+            <p>Verify successful software suite installation:</p>
+            <div class="command-container">
+                <pre><code>gz sim --version</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+
+            <h3>Launch Empty Gazebo Window</h3>
+            <div class="command-container">
+                <pre><code>gz sim</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+
+            <h2>16. Run PX4 with Gazebo Simulation</h2>
+            <p>Initialize the complete integrated flight environment simulation containing vehicle targets:</p>
+            <div class="command-container">
+                <pre><code>cd ~/PX4-Autopilot && make px4_sitl gz_x500</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            <div class="explanation-box">
+                <p>Execution Lifecycle Steps:</p>
+                <ol>
+                    <li>Launches operational firmware instances via PX4 SITL engine loops.</li>
+                    <li>Spawns Gazebo Harmonic visualization environment graphics interfaces.</li>
+                    <li>Models and renders the structural physics profile for an X500 quadcopter drone.</li>
+                    <li>Bridges synchronous real-time MAVLink data communication channels between tools.</li>
+                </ol>
+            </div>
+
+            <h2>17. Useful Gazebo Commands</h2>
+            
+            <p><strong>Open Gazebo:</strong> Launches the core standalone simulation space interface window.</p>
+            <div class="command-container">
+                <pre><code>gz sim</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+
+            <p><strong>List Available Gazebo Topics:</strong> Displays active sensor, dynamic actuator, and internal telemetry messaging streams.</p>
+            <div class="command-container">
+                <pre><code>gz topic -l</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+
+            <p><strong>Display Gazebo Services:</strong> Inspects and structures callable simulation parameters and world orchestrations.</p>
+            <div class="command-container">
+                <pre><code>gz service -l</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+
+            <p><strong>List Available Models:</strong> Identifies and enumerates all environment models and virtual actor assets spawned in world space.</p>
+            <div class="command-container">
+                <pre><code>gz model --list</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid #eaecef; margin: 24px 0;">
+
+            <h2>ROS 2 Jazzy Installation (Ubuntu 24.04)</h2>
+            <p><em>Target Version: ROS 2 Jazzy Jalisco (Long Term Support Release environment default for Noble Numbat).</em></p>
+
+            <h3>Step 1: System Baseline Package Upgrade</h3>
+            <div class="command-container">
+                <pre><code>sudo apt update && sudo apt upgrade -y</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+
+            <h3>Step 2: Set System Locale Settings</h3>
+            <p>ROS 2 nodes require environment formatting support across language environments using full UTF-8.</p>
+            <div class="command-container">
+                <pre><code>sudo apt install locales -y && sudo locale-gen en_US en_US.UTF-8 && sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 && export LANG=en_US.UTF-8</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+
+            <h3>Step 3: Enable Ubuntu Universe Repository Configurations</h3>
+            <div class="command-container">
+                <pre><code>sudo apt install software-properties-common -y && sudo add-apt-repository universe</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+
+            <h3>Step 4: Authorize and Pull Official ROS Repository Keys</h3>
+            <div class="command-container">
+                <pre><code>sudo apt update && sudo apt install curl -y && export ROS_APT_SOURCE_VERSION=$(curl -s https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest | grep -F "tag_name" | awk -F'"' '{print $4}') && curl -L -o /tmp/ros2-apt-source.deb "https://github.com/ros-infrastructure/ros-apt-source/releases/download/${ROS_APT_SOURCE_VERSION}/ros2-apt-source_${ROS_APT_SOURCE_VERSION}.$(. /etc/os-release && echo ${UBUNTU_CODENAME:-${VERSION_CODENAME}})_all.deb" && sudo dpkg -i /tmp/ros2-apt-source.deb</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+
+            <h3>Step 5: Execute Desktop Full Installation</h3>
+            <div class="command-container">
+                <pre><code>sudo apt update && sudo apt install ros-jazzy-desktop -y</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            <div class="explanation-box">
+                <p>Deploys Architecture Core Targets:</p>
+                <ul>
+                    <li>ROS 2 communications middleware data layers.</li>
+                    <li>RViz2 graphical spatial state analysis visual environments.</li>
+                    <li>Integrated package development tools, command line tools, and simulation nodes.</li>
+                </ul>
+            </div>
+
+            <h3>Step 6: Verify and Source Environment</h3>
+            <div class="command-container">
+                <pre><code>source /opt/ros/jazzy/setup.bash && ros2 --version</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+
+            <h3>Step 7: Node Communication Verification Testing</h3>
+            <p>Confirm message orchestration across process borders. Open two distinct console terminal paths:</p>
+            <p><strong>Terminal Window 1 (Talker Broadcaster Node):</strong></p>
+            <div class="command-container">
+                <pre><code>source /opt/ros/jazzy/setup.bash && ros2 run demo_nodes_cpp talker</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            <p><strong>Terminal Window 2 (Listener Node):</strong></p>
+            <div class="command-container">
+                <pre><code>source /opt/ros/jazzy/setup.bash && ros2 run demo_nodes_py listener</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            <p><em>Verify that message publishing streams outputting from Window 1 successfully mirror inside Window 2.</em></p>
+
+            <hr style="border: 0; border-top: 1px solid #eaecef; margin: 24px 0;">
+
+            <h2>8. Install QGroundControl (QGC)</h2>
+            <p>QGroundControl serves as the host computer Ground Control Station (GCS) app layout layer communicating with active live simulated or deployment drones over structural MAVLink hooks.</p>
+
+            <p>Provision directories and download the executable file container:</p>
+            <div class="command-container">
+                <pre><code>mkdir -p ~/Downloads && cd ~/Downloads && wget https://d176tv9ibo4jno.cloudfront.net/latest/QGroundControl.AppImage</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+
+            <p>Elevate application execute security file permissions:</p>
+            <div class="command-container">
+                <pre><code>chmod +x QGroundControl.AppImage</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+
+            <p>Initialize and run the user configuration software interface:</p>
+            <div class="command-container">
+                <pre><code>./QGroundControl.AppImage</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+            <div class="explanation-box">
+                <p>Operational Panels Loaded:</p>
+                <ul>
+                    <li>Live vehicle dynamic positioning and status panel readouts.</li>
+                    <li>Spatial geographical map flight planning tracking view environments.</li>
+                    <li>MAVLink data communication telemetry streaming indicators.</li>
+                </ul>
+            </div>
+
+            <hr style="border: 0; border-top: 1px solid #eaecef; margin: 24px 0;">
+
+            <h2>Complete Workflow Pipeline</h2>
+            <div class="workflow">
+                Windows PowerShell (Admin Role)<br>
+                ↓<br>
+                Enable WSL2 Infrastructure Engine<br>
+                ↓<br>
+                Provision Ubuntu 24.04 Dev Instance<br>
+                ↓<br>
+                Access Native Linux Home Directory (cd ~)<br>
+                ↓<br>
+                Clone Source Repositories recursively<br>
+                ↓<br>
+                Provision Environment Packages Script dependencies<br>
+                ↓<br>
+                Build Target SITL Firmware Files<br>
+                ↓<br>
+                Install Gazebo Harmonic Engine Layers<br>
+                ↓<br>
+                Install Desktop ROS 2 Jazzy Suite<br>
+                ↓<br>
+                Deploy Ground Control AppImage Components<br>
+                ↓<br>
+                Initialize Execution Framework: <code>make px4_sitl gz_x500</code><br>
+                ↓<br>
+                Boot Operational Station GUI Panels<br>
+                ↓<br>
+                <strong>Fully Orchestrated Simulation Active!</strong>
+            </div>
+
+        </div>
     </div>
 
+    <script>
+        function copyCommand(button) {
+            const codeBlock = button.previousElementSibling.querySelector('code');
+            const commandText = codeBlock.textContent || codeBlock.innerText;
+            
+            navigator.clipboard.writeText(commandText).then(() => {
+                const originalText = button.innerText;
+                button.innerText = "Copied!";
+                button.style.backgroundColor = "#2ea44f";
+                button.style.borderColor = "#2ea44f";
+                button.style.color = "#ffffff";
+                
+                setTimeout(() => {
+                    button.innerText = originalText;
+                    button.style.backgroundColor = "#30363d";
+                    button.style.borderColor = "#f0f6fc26";
+                    button.style.color = "#c9d1d9";
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text contents: ', err);
+            });
+        }
+    </script>
 </body>
 </html>
