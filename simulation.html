@@ -769,29 +769,56 @@
             <p>QGroundControl serves as the host computer Ground Control Station (GCS) app layout layer communicating
                 with active live simulated or deployment drones over structural MAVLink hooks.</p>
 
-            <p>Provision directories and download the executable file container:</p>
+            <p>Provision directories and fetch the latest QGroundControl release download URL:</p>
             <div class="command-container">
-                <pre><code>mkdir -p ~/Downloads && cd ~/Downloads && wget https://d176tv9ibo4jno.cloudfront.net/latest/QGroundControl.AppImage</code></pre>
+                <pre><code>curl -s https://api.github.com/repos/mavlink/qgroundcontrol/releases/latest \
+  | grep "browser_download_url" | grep "x86_64.AppImage"</code></pre>
+                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+            </div>
+
+            <p>Provision directories and download the executable file container using the latest release URL:</p>
+            <div class="command-container">
+                <pre><code>mkdir -p ~/Downloads && wget -O ~/Downloads/QGroundControl.AppImage \
+  $(curl -s https://api.github.com/repos/mavlink/qgroundcontrol/releases/latest \
+  | grep "browser_download_url" | grep "x86_64.AppImage" \
+  | cut -d '"' -f 4)</code></pre>
                 <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
             </div>
 
             <p>Elevate application execute security file permissions:</p>
             <div class="command-container">
-                <pre><code>chmod +x QGroundControl.AppImage</code></pre>
+                <pre><code>chmod +x ~/Downloads/QGroundControl.AppImage</code></pre>
                 <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
             </div>
 
             <p>Initialize and run the user configuration software interface:</p>
             <div class="command-container">
-                <pre><code>./QGroundControl.AppImage</code></pre>
+                <pre><code>cd ~/Downloads && ./QGroundControl.AppImage --appimage-extract-and-run</code></pre>
                 <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
             </div>
+
             <div class="explanation-box">
                 <p>Operational Panels Loaded:</p>
                 <ul>
                     <li>Live vehicle dynamic positioning and status panel readouts.</li>
                     <li>Spatial geographical map flight planning tracking view environments.</li>
                     <li>MAVLink data communication telemetry streaming indicators.</li>
+                </ul>
+            </div>
+
+            <div class="explanation-box" style="border-left: 4px solid #f0ad4e; background: #fff8f0;">
+                <p><strong>⚠️ WSL Notes:</strong></p>
+                <ul>
+                    <li>The official CloudFront URL (<code>d176tv9ibo4jno.cloudfront.net</code>) returns
+                        <code>403 Forbidden</code> in terminal — always use the GitHub releases link above.
+                    </li>
+                    <li>The dynamic <code>curl</code> command above always fetches the latest version automatically — no
+                        need to manually update the version number.</li>
+                    <li>The <code>--appimage-extract-and-run</code> flag bypasses FUSE errors common in WSL
+                        environments.</li>
+                    <li>When prompted for <strong>Firmware</strong> and <strong>Vehicle</strong> on first launch, select
+                        <strong>PX4 Pro</strong> and <strong>Multi-Rotor</strong> for simulation.
+                    </li>
                 </ul>
             </div>
 
