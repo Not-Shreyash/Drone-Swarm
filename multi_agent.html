@@ -300,118 +300,128 @@
         <a href="about.html">About Us</a>
         <a href="ProDro.html">Drone Statics</a>
         <a href="simulation.html">Simulation Setup</a>
-        <a href="single_agent.html" class="active">Single-Drone System</a>
-        <a href="multi_agent.html">Multi-Drone System</a>
+        <a href="single_agent.html">Single-Drone System</a>
+        <a href="multi_agent.html" class="active">Multi-Drone System</a>
     </div>
 
     <div class="main-container">
 
         <div class="top-header">
-            <h1>Single-Drone System</h1>
+            <h1>Multi-Drone System</h1>
         </div>
 
         <div class="content-body">
 
-            <h2>Autonomous Drone System</h2>
+            <h2>Overview</h2>
             <ul>
-                <li>An Autonomous Drone System is an unmanned aerial vehicle (UAV) capable of performing tasks with minimal or no human intervention.</li>
-                <li>It integrates hardware, software, communication protocols, and control algorithms into a single cyber-physical system.</li>
-                <li>The system continuously senses its environment, processes information, makes decisions, and executes control commands.</li>
-                <li>Modern autonomous drones are widely used in surveillance, mapping, agriculture, logistics, inspection, search and rescue, and military operations.</li>
+                <li>A Multi-Drone System consists of two or more drones operating simultaneously within a shared mission environment.</li>
+                <li>Each drone functions as an independent robotic system while communicating and coordinating with other drones.</li>
+                <li>Multi-drone systems improve scalability, mission efficiency, redundancy, and coverage compared to a single drone.</li>
+
             </ul>
 
-
-
-            <h2>Characteristics and Functionalities</h2>
+            <h2>Advantages of Multi-Drone Systems</h2>
             <ul>
-                <li><strong>Characteristics:</strong> <ul>
-                    <li>Autonomous Navigation and sensor based perception</li>
-                    <li>Real-time decision making and control</li>
-                    <li>Wireless communication and mission execution</li>
-                </ul></li>
-                <li><strong>Functionalities:</strong> <ul>
-                    <li>Environment sensing and localization</li>
-                    <li>State estimation and flight control</li>
-                    <li>Data logging and path planning</li>
-                </ul></li>
+                <li>Increased coverage area and improved fault tolerance.</li>
+                <li>Scalable and faster mission execution.</li>
             </ul>
 
-            <h2>Autonomous Drone Architecture</h2>
-            <div class="architecture-box">
-                <strong>User</strong><br>
-                └── <strong>QGround Control & MAVLINK Communication</strong><br>
-                &nbsp;&nbsp;└── <strong>ROS2 Framework</strong>(Various Nodes [Functions])<br>
-                &nbsp;&nbsp;&nbsp;└── <strong>DDS Middleware and PX4 Autopilot</strong><br>
-                &nbsp;&nbsp;&nbsp;&nbsp;└── <strong>Flight Controllers</strong> (for position, velocity, rate, etc.)<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <strong>DRONE</strong>
-            </div>
+            <h2>Single Drone vs Multi-Drone Comparison</h2>
 
-            <h2>Software Stack</h2>
-            <div class="architecture-box">
-                <strong>Application</strong><br>
-                └── AI, Vision, Planning<br>
-                <strong>ROS2</strong><br>
-                └── Communication<br>       
-                <strong>DDS</strong><br>
-                └── Middleware<br>
-                <strong>PX4</strong><br>
-                └── Flight Control<br>
-                <strong>Drivers and Hardware</strong><br>
-                └── Hardware interface and physical execution<br>
-            </div>
+            <table border="1" cellspacing="0" cellpadding="8" style="border-collapse: collapse; width:100%; text-align:center;">
+                <thead style="color:rgb(0, 0, 0);">
+                    <tr>
+                        <th>Feature</th>
+                        <th>Single Drone</th>
+                        <th>Multi-Drone</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td><strong>Number of UAVs</strong></td>
+                        <td>1</td>
+                        <td>2 or More</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Coordination</strong></td>
+                        <td>Not Required</td>
+                        <td>Required</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Communication</strong></td>
+                        <td>Internal Communication Only</td>
+                        <td>Internal + Inter-Drone Communication</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Mission Planning</strong></td>
+                        <td>Local Planning</td>
+                        <td>Centralized or Distributed Planning</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Scalability</strong></td>
+                        <td>Low</td>
+                        <td>High</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Fault Tolerance</strong></td>
+                        <td>Low (Single Point of Failure)</td>
+                        <td>High (Mission Continues if One Drone Fails)</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Coverage Area</strong></td>
+                        <td>Limited</td>
+                        <td>Large</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Mission Completion Time</strong></td>
+                        <td>Longer</td>
+                        <td>Shorter Due to Parallel Execution</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Communication Complexity</strong></td>
+                        <td>Low</td>
+                        <td>High</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Deployment Cost</strong></td>
+                        <td>Lower</td>
+                        <td>Higher</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Maintenance</strong></td>
+                        <td>Simpler</td>
+                        <td>More Complex</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Typical Applications</strong></td>
+                        <td>Inspection, Photography, Mapping</td>
+                        <td>Swarm Robotics, Search & Rescue, Delivery Fleets, Agriculture</td>
+                    </tr>
+                </tbody>
+            </table>
             
-            <h2>ROS2 (Robot Operating System 2)</h2>
+
+            <h2>Problems Introduced by Multiple Drones</h2>
             <ul>
-                <li>It is an open-source robotics middleware.</li>
-                <li>ROS2 enables the communication between distributed software components.</li>
-                <li>It provides standardized tools for robotic application development.</li>
-                <li>Its major components are Nodes, Publishers, Subscribers, Parameters, etc.</li>
+                <li>The topic names might collide so it's important to use unique identifiers for each drone.</li>
+                <li>Coordination and control become more complex with multiple drones.</li>
+                <li>Managing communication and data sharing between drones requires robust protocols.</li>
             </ul>
 
-            <h2>DDS (Data Distribution Service)</h2>
-            <ul>
-                <li>DDS is the communication middleware used by ROS2.</li>
-                <li>It removes the need for a central master server.</li>
-                <li>It supports real-time distributed applications</li>
-                <li>Its main features are automatic discovery, configurable QoS, security and scalability.</li>
-            </ul>
-
-            <h2>PX4 Autopilot</h2>
-            <ul>
-                <li>PX4 is an open-source flight control software for drones and other unmanned vehicles.</li>
-                <li>It provides a complete autopilot solution, including flight control algorithms, sensor drivers, and communication protocols.</li>
-                <li>PX4 supports various vehicle types, including multirotors, fixed-wing aircraft, and VTOLs.</li>
-                <li>It is compatible with various hardware platforms and integrates with ROS2 for advanced functionalities.</li>
-            </ul>
-
-            <h2>ROS2 and PX4 Integration</h2>
-            <ul>
-                <li>Sensor data are collected and processed by ROS2 nodes.</li>
-                <li>PX4 publishes the topics for communication with ROS2.</li>
-                <li>DDS transports the messages between the nodes.</li>
-                <li>ROS2 receives and processes the data for further analysis and control.</li>
-                <li>New commands are generated and sent back to PX4.</li>
-            </ul>
-
-            <h2>State Estimation and Mission Execution</h2>
-            <ul>
-                <li>State estimation involves determining the position, velocity, and orientation of the drone.</li>
-                <li>Mission execution refers to the autonomous navigation and task completion capabilities of the drone.</li>
-            </ul>
-            <div class="architecture-box">
-                <strong>Mission Upload</strong><br>
-                &nbsp;└─ <strong>Waypoints</strong><br>
-                &nbsp;&nbsp;└── <strong>Navigator and Planner</strong><br>
-                &nbsp;&nbsp;&nbsp;└── <strong>Controllers</strong><br>
-                &nbsp;&nbsp;&nbsp;&nbsp;└── <strong>Motors</strong><br>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <strong>DRONE MOTION</strong>
-            </div>
-        <h2>Limitations of Single Drone Systems</h2>
-        <ul>
-            <li>Limited coverage area and payload capacity.</li>
-            <li>Single point of failure, leading to mission failure if the drone malfunctions.</li>
-            <li>Limited scalability for large-scale operations.</li>
-        </ul>
+        </div>
+    </div>    
 </body>
 
 </html>
