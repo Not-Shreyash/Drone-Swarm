@@ -492,6 +492,53 @@ PX4_GZ_STANDALONE=1 PX4_SYS_AUTOSTART=4001 PX4_GZ_MODEL_POSE="0,2,0" PX4_SIM_MOD
                 <li><code>/px4_2/fmu/out/vehicle_odometry</code></li>
             </ul>
 
+            <h2>Assigning Custom Unique Namespaces</h2>
+            <p>By default, the PX4 simulator uses your <code>-i</code> (instance) flag to generate generic prefixes like <code>px4_1</code> and <code>px4_2</code>.</p>
+            <p>If you want semantic, custom names (e.g., <code>drone_alpha</code> and <code>drone_beta</code>), you can inject the <code>PX4_UXRCE_DDS_NS</code> environment variable before launching your targets.</p>
+            <p>Close your current simulation terminals and restart them with these commands:</p>
+
+            <h3>Terminal 1 (Drone Alpha - Master Launch)</h3>
+            <div class="command-container">
+                <pre><code id="code-block-6">cd ~/PX4-Autopilot
+PX4_UXRCE_DDS_NS=drone_alpha PX4_SYS_AUTOSTART=4001 PX4_SIM_MODEL=gz_x500 ./build/px4_sitl_default/bin/px4 -i 1</code></pre>
+                <button class="copy-btn" onclick="copyToClipboard('code-block-6', this)">Copy</button>
+            </div>
+
+            <h3>Terminal 2 (Drone Beta - Spawn into Same World)</h3>
+            <div class="command-container">
+                <pre><code id="code-block-7">cd ~/PX4-Autopilot
+PX4_UXRCE_DDS_NS=drone_beta PX4_GZ_STANDALONE=1 PX4_SYS_AUTOSTART=4001 PX4_GZ_MODEL_POSE="0,2,0" PX4_SIM_MODEL=gz_x500 ./build/px4_sitl_default/bin/px4 -i 2</code></pre>
+                <button class="copy-btn" onclick="copyToClipboard('code-block-7', this)">Copy</button>
+            </div>
+
+            <h3>Terminal 3 (Micro XRCE-DDS Agent)</h3>
+            <div class="command-container">
+                <pre><code id="code-block-8">MicroXRCEAgent udp4 -p 8888</code></pre>
+                <button class="copy-btn" onclick="copyToClipboard('code-block-8', this)">Copy</button>
+            </div>
+
+            <h2>Custom Namespace Verification</h2>
+            <p>Open a separate terminal and audit your active ROS 2 topics. First, source ROS 2 in your current terminal workspace:</p>
+            
+            <p>If you are running ROS 2 Jazzy:</p>
+            <div class="command-container">
+                <pre><code id="code-block-9">source /opt/ros/jazzy/setup.bash</code></pre>
+                <button class="copy-btn" onclick="copyToClipboard('code-block-9', this)">Copy</button>
+            </div>
+            <p><i>(If you aren't sure which distribution you installed, type <code>ls /opt/ros/</code> to check the directory folder name).</i></p>
+
+            <p>Once you've run the correct source command, review your active ROS 2 topics:</p>
+            <div class="command-container">
+                <pre><code id="code-block-10">ros2 topic list</code></pre>
+                <button class="copy-btn" onclick="copyToClipboard('code-block-10', this)">Copy</button>
+            </div>
+
+            <p>You will see that the generic prefixes have been replaced with your targeted custom namespaced variants:</p>
+            <ul>
+                <li><code>/drone_alpha/fmu/out/vehicle_odometry</code></li>
+                <li><code>/drone_beta/fmu/out/vehicle_odometry</code></li>
+            </ul>
+
         </div>
     </div>
 
