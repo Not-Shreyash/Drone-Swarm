@@ -317,7 +317,6 @@
                 <li>A Multi-Drone System consists of two or more drones operating simultaneously within a shared mission environment.</li>
                 <li>Each drone functions as an independent robotic system while communicating and coordinating with other drones.</li>
                 <li>Multi-drone systems improve scalability, mission efficiency, redundancy, and coverage compared to a single drone.</li>
-
             </ul>
 
             <h2>Advantages of Multi-Drone Systems</h2>
@@ -411,7 +410,6 @@
                     </tr>
                 </tbody>
             </table>
-            
 
             <h2>Problems Introduced by Multiple Drones</h2>
             <ul>
@@ -420,8 +418,106 @@
                 <li>Managing communication and data sharing between drones requires robust protocols.</li>
             </ul>
 
+            <h2>Simulation Setup Guide (Gazebo Harmonic)</h2>
+            <p>The following structural framework defines how multiple independent vehicle targets interact and coexist within the Gazebo Harmonic execution layer.</p>
+
+            <h3>Step 1: Compile the Modern SITL Target</h3>
+            <p>Before executing deployment operations, verify that your regional PX4-Autopilot environment contains compiled targets mapped to the new Gazebo engine targets.</p>
+            <div class="command-container">
+                <pre><code id="code-block-1">cd ~/PX4-Autopilot
+make px4_sitl</code></pre>
+                <button class="copy-btn" onclick="copyToClipboard('code-block-1', this)">Copy</button>
+            </div>
+
+            <h3>Step 2: Launch Drone 1 (Starts the Simulator)</h3>
+            <p>The first drone target instantiated parameters act as the core master runtime host environment. This initializes the primary Gazebo environment space window and drops the base quadcopter asset directly onto the local origin point layout.</p>
+            <p>Open a new terminal session <strong>(Terminal 1)</strong> and run:</p>
+            <div class="command-container">
+                <pre><code id="code-block-2">cd ~/PX4-Autopilot
+PX4_SYS_AUTOSTART=4001 PX4_SIM_MODEL=gz_x500 ./build/px4_sitl_default/bin/px4 -i 1</code></pre>
+                <button class="copy-btn" onclick="copyToClipboard('code-block-2', this)">Copy</button>
+            </div>
+
+            <div class="explanation-box">
+                <p>Environment Flags Breakdown:</p>
+                <ul>
+                    <li><strong>PX4_SYS_AUTOSTART=4001</strong> : Automatically initializes the system using the x500 baseline frame architecture definition.</li>
+                    <li><strong>PX4_SIM_MODEL=gz_x500</strong> : Forces the deployment engine loop to bind and structure configurations onto the specialized Gazebo x500 SDF file layout.</li>
+                    <li><strong>-i 1</strong> : Flags the framework to label this context as Instance 1, assigning dedicated internal multi-agent port mappings to preserve telemetry streams cleanly.</li>
+                </ul>
+            </div>
+
+            <h3>Step 3: Launch Drone 2 (Spawns into the Same World)</h3>
+            <p>To drop secondary assets into the environment space, specify to the local engine workspace to skip opening redundant graphical client layers, binding directly into the running instance workspace via positional offsets.</p>
+            <p>Open a separate terminal session <strong>(Terminal 2)</strong> and run:</p>
+            <div class="command-container">
+                <pre><code id="code-block-3">cd ~/PX4-Autopilot
+PX4_GZ_STANDALONE=1 PX4_SYS_AUTOSTART=4001 PX4_GZ_MODEL_POSE="0,2,0" PX4_SIM_MODEL=gz_x500 ./build/px4_sitl_default/bin/px4 -i 2</code></pre>
+                <button class="copy-btn" onclick="copyToClipboard('code-block-3', this)">Copy</button>
+            </div>
+
+            <div class="explanation-box">
+                <p>Environment Flags Breakdown:</p>
+                <ul>
+                    <li><strong>PX4_GZ_STANDALONE=1</strong> : Critical flag parameter configuring the runtime environment to reuse the active simulation engine portal, preventing workspace execution faults.</li>
+                    <li><strong>PX4_GZ_MODEL_POSE="0,2,0"</strong> : Declares precise coordinate translation parameters [X, Y, Z] to offset the secondary asset by 2 meters, ensuring clean asset loading without model overlap.</li>
+                    <li><strong>-i 2</strong> : Explicitly sets parameters to denote Instance 2, systematically separating MAVLink ports out of the path of Instance 1.</li>
+                </ul>
+            </div>
+
+            <h3>Step 4: Run the Micro XRCE-DDS Agent</h3>
+            <p>To enable clean communication with ROS 2 layouts, activate the DDS middleware bridge. The internal network hooks monitor and manage multiple active clients simultaneously under a unified portal layer.</p>
+            <p>Open an additional terminal session <strong>(Terminal 3)</strong> and run:</p>
+            <div class="command-container">
+                <pre><code id="code-block-4">MicroXRCEAgent udp4 -p 8888</code></pre>
+                <button class="copy-btn" onclick="copyToClipboard('code-block-4', this)">Copy</button>
+            </div>
+            <p>The processing logs will quickly report successful initialization parameters tracking operational streams for both client 1 and client 2 assets.</p>
+
+            <h3>Step 5: Verification and Telemetry Auditing</h3>
+            
+            <h3>QGroundControl Dashboard</h3>
+            <p>Launch QGroundControl within your system workspace. The application interface handles tracking of both distinct MAVLink streams automatically. The upper dashboard interface screen highlights an options drop-down element listing Vehicle 1 and Vehicle 2, allowing distinct mission operational tracking profiles.</p>
+
+            <h3>ROS 2 Interface Nodes</h3>
+            <p>Confirm isolated namespace handling arrays by initializing a distinct shell workspace and evaluating running active cluster topics:</p>
+            <div class="command-container">
+                <pre><code id="code-block-5">ros2 topic list</code></pre>
+                <button class="copy-btn" onclick="copyToClipboard('code-block-5', this)">Copy</button>
+            </div>
+
+            <p>The architecture layer automatically formats all corresponding telemetry and diagnostic streams under isolated namespaced structures, preventing cross-talk tracking metrics:</p>
+            <ul>
+                <li><code>/px4_1/fmu/out/vehicle_odometry</code></li>
+                <li><code>/px4_2/fmu/out/vehicle_odometry</code></li>
+            </ul>
+
         </div>
-    </div>    
+    </div>
+
+    <script>
+        function copyToClipboard(elementId, button) {
+            const codeElement = document.getElementById(elementId);
+            if (!codeElement) return;
+
+            const textToCopy = codeElement.innerText;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalText = button.innerText;
+                button.innerText = 'Copied!';
+                button.style.backgroundColor = '#238636';
+                button.style.color = '#ffffff';
+
+                setTimeout(() => {
+                    button.innerText = originalText;
+                    button.style.backgroundColor = '';
+                    button.style.color = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('Error attempting to copy content to clipboard: ', err);
+            });
+        }
+    </script>
 </body>
 
 </html>
