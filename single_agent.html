@@ -132,7 +132,7 @@
 
         .command-container {
             position: relative;
-            background-color: #1c1e21;
+            background-color: #000000;
             border-radius: 6px;
             margin-bottom: 16px;
             padding: 14px 16px;
@@ -272,7 +272,7 @@
             color: #666;
             font-size: 14px;
             margin-bottom: 25px;
-        }
+            }
 
         .video-container {
             text-align: center;
@@ -320,20 +320,22 @@
                 <li>Modern autonomous drones are widely used in surveillance, mapping, agriculture, logistics, inspection, search and rescue, and military operations.</li>
             </ul>
 
-
-
             <h2>Characteristics and Functionalities</h2>
             <ul>
-                <li><strong>Characteristics:</strong> <ul>
-                    <li>Autonomous Navigation and sensor based perception</li>
-                    <li>Real-time decision making and control</li>
-                    <li>Wireless communication and mission execution</li>
-                </ul></li>
-                <li><strong>Functionalities:</strong> <ul>
-                    <li>Environment sensing and localization</li>
-                    <li>State estimation and flight control</li>
-                    <li>Data logging and path planning</li>
-                </ul></li>
+                <li><strong>Characteristics:</strong>
+                    <ul>
+                        <li>Autonomous Navigation and sensor based perception</li>
+                        <li>Real-time decision making and control</li>
+                        <li>Wireless communication and mission execution</li>
+                    </ul>
+                </li>
+                <li><strong>Functionalities:</strong>
+                    <ul>
+                        <li>Environment sensing and localization</li>
+                        <li>State estimation and flight control</li>
+                        <li>Data logging and path planning</li>
+                    </ul>
+                </li>
             </ul>
 
             <h2>Autonomous Drone Architecture</h2>
@@ -406,12 +408,106 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;└── <strong>Motors</strong><br>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── <strong>DRONE MOTION</strong>
             </div>
-        <h2>Limitations of Single Drone Systems</h2>
-        <ul>
-            <li>Limited coverage area and payload capacity.</li>
-            <li>Single point of failure, leading to mission failure if the drone malfunctions.</li>
-            <li>Limited scalability for large-scale operations.</li>
-        </ul>
-</body>
 
+            <h2>Limitations of Single Drone Systems</h2>
+            <ul>
+                <li>Limited coverage area and payload capacity.</li>
+                <li>Single point of failure, leading to mission failure if the drone malfunctions.</li>
+                <li>Limited scalability for large-scale operations.</li>
+            </ul>
+
+            <h2>Simulation Setup & Flight Guide</h2>
+            <p>Now that you have successfully completed the workspace setup and tool configurations (Ubuntu, ROS 2, Gazebo, PX4, and QGroundControl), follow these detailed instructions to run a single-agent drone simulation and conduct an autonomous test flight.</p>
+
+            <h3>Step 1: Launch PX4 SITL and Gazebo Environment</h3>
+            <p>First, compile the PX4 firmware configuration specifically targeting Software-in-the-Loop simulation environments and automatically launch the quadrotor model into a 3D Gazebo environment.</p>
+            <p>Open a new Linux terminal window in Ubuntu using the system shortcut <strong>Ctrl + Alt + T</strong>, then change the environment directory to your local repository directory:</p>
+            
+            <div class="command-container">
+                <pre><code id="cmd1">cd ~/PX4-Autopilot</code></pre>
+                <button class="copy-btn" onclick="copyCode('cmd1', this)">Copy</button>
+            </div>
+
+            <p>Initiate the automated build pipeline and environment compilation target by entering the following command:</p>
+            <div class="command-container">
+                <pre><code id="cmd2">make px4_sitl gz_x500</code></pre>
+                <button class="copy-btn" onclick="copyCode('cmd2', this)">Copy</button>
+            </div>
+
+            <div class="explanation-box">
+                <p>Command Parameter Breakdown</p>
+                <ul>
+                    <li><strong>make:</strong> Invokes the build automation system to compile the source code components.</li>
+                    <li><strong>px4_sitl:</strong> Defines the target output as a software-in-the-loop simulation environment.</li>
+                    <li><strong>gz_x500:</strong> Directs the simulator tool to spawn the standard x500 multirotor model framework inside Gazebo.</li>
+                </ul>
+            </div>
+
+            <div class="explanation-box" style="border-left-color: #d9ad26;">
+                <p style="color: #b08000;">Compilation Note</p>
+                <ul>
+                    <li>Initial workspace builds can require additional runtime to map dependencies. Do not close this terminal instance, as it hosts your running PX4 shell window.</li>
+                </ul>
+            </div>
+
+            <h3>Step 2: Initialize QGroundControl Linkage</h3>
+            <p>With the physical drone simulation initialized and active in your background server, connect a reliable ground console monitor. Open a secondary terminal instance.</p>
+            <p>Navigate to your executable directory storage point and launch the QGroundControl application layer script:</p>
+            
+            <div class="command-container">
+                <pre><code id="cmd3">./QGroundControl.AppImage</code></pre>
+                <button class="copy-btn" onclick="copyCode('cmd3', this)">Copy</button>
+            </div>
+
+            <p>Once initialization scripts settle, QGroundControl should seamlessly parse incoming MAVLink telemetry packet strings over your local interface structure. A voice announcement confirmation will announce status readiness, showing your active model structure tracking on the UI map layer.</p>
+
+            <h3>Step 3: Execute Flight Tests</h3>
+            <p>Autonomous physical flight control tracking states can be evaluated via two discrete methodologies within this framework configuration:</p>
+
+            <h3>Method A: Graphical Mission Interface (QGroundControl)</h3>
+            <ul>
+                <li>Locate the <strong>"Takeoff"</strong> option within the top-left toolbar panel space.</li>
+                <li>Complete the operation by sliding the confirmation panel widget at the screen baseline.</li>
+                <li>Observe the Gazebo frame view to monitor engine spin-up routines and stabilization tracking during hovering maneuvers.</li>
+                <li>Select the corresponding interface <strong>"Land"</strong> control sequence parameter when ready to close down.</li>
+            </ul>
+
+            <h3>Method B: Direct Shell Terminal Control Utilities</h3>
+            <p>Return attention to your initial working terminal window hosting the active <code>pxh&gt;</code> interactive firmware environment string interface. Command direct vehicle control transitions using input strings:</p>
+            
+            <div class="command-container">
+                <pre><code id="cmd4">commander takeoff</code></pre>
+                <button class="copy-btn" onclick="copyCode('cmd4', this)">Copy</button>
+            </div>
+
+            <p>The system will lift off and assume standard automated holding limits within the simulation window. Bring the craft down smoothly by typing:</p>
+            <div class="command-container">
+                <pre><code id="cmd5">commander land</code></pre>
+                <button class="copy-btn" onclick="copyCode('cmd5', this)">Copy</button>
+            </div>
+            </div> </div> <script>
+        function copyCode(id, button) {
+            const codeElement = document.getElementById(id);
+            const textToCopy = codeElement.innerText || codeElement.textContent;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const originalText = button.innerText;
+                button.innerText = 'Copied!';
+                button.style.backgroundColor = '#28a745';
+                button.style.borderColor = '#28a745';
+                button.style.color = '#ffffff';
+                
+                setTimeout(() => {
+                    button.innerText = originalText;
+                    button.style.backgroundColor = '#30363d';
+                    button.style.borderColor = '#f0f6fc26';
+                    button.style.color = '#c9d1d9';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
+    </script>
+
+</body>
 </html>
