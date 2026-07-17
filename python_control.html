@@ -876,6 +876,488 @@ To verify that MAVSDK has been installed correctly, run the following command:
     </ul>
 
 </div>
+<h2>7. Writing Our First Program: connect.py</h2>
+
+<p>
+
+Now that MAVSDK has been installed successfully, we are ready to write our first Python program.
+
+The objective of this program is simple:
+
+</p>
+
+<ul>
+
+    <li>Create a drone object.</li>
+
+    <li>Connect to PX4.</li>
+
+    <li>Wait until the connection is established.</li>
+
+    <li>Print a success message.</li>
+
+</ul>
+<h3>Step 1: Create the Python file</h3>
+
+<div class="command-container">
+
+    <pre id="cmd13"><code>touch connect.py</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd13', this)">
+        Copy
+    </button>
+
+</div>
+
+<p>
+
+You can open the file using VS Code:
+
+</p>
+
+<div class="command-container">
+
+    <pre id="cmd14"><code>code connect.py</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd14', this)">
+        Copy
+    </button>
+
+</div>
+<h3>Step 2: Write the following code</h3>
+
+<div class="command-container">
+
+<pre id="cmd15"><code>import asyncio
+from mavsdk import System
+
+
+async def main():
+
+    print("Creating drone object...")
+
+    drone = System()
+
+    print("Connecting to PX4...")
+
+    await drone.connect(
+        system_address="udpin://0.0.0.0:14540"
+    )
+
+    print("Waiting for drone connection...")
+
+    async for state in drone.core.connection_state():
+
+        if state.is_connected:
+
+            print("✅ Connected to the drone!")
+
+            break
+
+
+if __name__ == "__main__":
+
+    asyncio.run(main())
+</code></pre>
+
+<button class="copy-btn"
+    onclick="copyCode('cmd15', this)">
+    Copy
+</button>
+
+</div>
+<h3>Step 3: Understanding the Code</h3>
+
+<table>
+
+<tr>
+    <th>Line</th>
+    <th>Meaning</th>
+</tr>
+
+<tr>
+    <td>import asyncio</td>
+    <td>Imports Python's asynchronous library.</td>
+</tr>
+
+<tr>
+    <td>from mavsdk import System</td>
+    <td>Imports the MAVSDK drone interface.</td>
+</tr>
+
+<tr>
+    <td>drone = System()</td>
+    <td>Creates a drone object.</td>
+</tr>
+
+<tr>
+    <td>await drone.connect(...)</td>
+    <td>Connects to PX4 through MAVLink.</td>
+</tr>
+
+<tr>
+    <td>async for ...</td>
+    <td>Continuously listens for updates.</td>
+</tr>
+
+<tr>
+    <td>state.is_connected</td>
+    <td>Checks whether the drone is connected.</td>
+</tr>
+
+<tr>
+    <td>break</td>
+    <td>Stops the loop after connecting.</td>
+</tr>
+
+</table>
+<h3>Step 4: Run the program</h3>
+
+<p>
+
+Before running the script, make sure:
+
+</p>
+
+<ul>
+
+    <li>PX4 SITL is running. (seperate terminal)</li>
+
+    <li>Gazebo is open.(seperate terminal)</li>
+
+    <li>The virtual environment is activated.</li>
+
+</ul>
+
+<div class="command-container">
+
+    <pre id="cmd16"><code>python connect.py</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd16', this)">
+        Copy
+    </button>
+
+</div>
+<h3>Expected Output</h3>
+
+<div class="command-container">
+
+<pre><code>Creating drone object...
+
+Connecting to PX4...
+
+Waiting for drone connection...
+
+✅ Connected to the drone!
+</code></pre>
+
+</div>
+<h3>⚠️ Common Errors and Solutions</h3>
+
+<div class="explanation-box">
+
+    <p>
+
+        Error 1: Connection timeout
+
+    </p>
+
+    <ul>
+
+        <li>
+
+            Cause: PX4 SITL or Gazebo is not running.
+
+        </li>
+
+        <li>
+
+            Solution: 
+
+        </li>
+        <h3>In a new terminal</h3>
+
+    </ul>
+
+</div>
+
+<div class="command-container">
+
+    <pre id="cmd17"><code>cd ~/PX4-Autopilot
+
+make px4_sitl gz_x500</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd17', this)">
+        Copy
+    </button>
+
+</div>
+<div class="explanation-box">
+
+    <p>
+
+        Error 2: "Connection using udp:// is deprecated"
+
+    </p>
+
+    <ul>
+
+        <li>
+
+            This warning was encountered during this project.
+
+        </li>
+
+        <li>
+
+            Replace:
+
+        </li>
+
+    </ul>
+
+</div>
+
+<div class="command-container">
+
+<pre><code>udp://0.0.0.0:14540</code></pre>
+
+</div>
+
+<p>with:</p>
+
+<div class="command-container">
+
+<pre><code>udpin://0.0.0.0:14540</code></pre>
+
+</div>
+<h3>📝 Notes</h3>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>
+
+            The drone does not need to be flying to establish a connection.
+
+        </li>
+
+        <li>
+
+            PX4 continuously sends telemetry data even while the drone is on the ground.
+
+        </li>
+
+        <li>
+
+            The program uses asynchronous programming, which allows it to wait for updates without freezing.
+
+        </li>
+
+        <li>
+
+            Port <b>14540</b> is used by PX4 SITL to communicate with MAVSDK.
+
+        </li>
+
+    </ul>
+
+</div>
+<h2>8. Understanding Telemetry</h2>
+
+<p>
+
+Telemetry is the data continuously sent by the drone to the ground station or
+to our Python program.
+
+Even when the drone is not flying, PX4 keeps transmitting information such as
+GPS location and health status.
+
+</p>
+
+<div class="explanation-box">
+
+    <p>
+
+        Examples of telemetry data:
+
+    </p>
+
+    <ul>
+
+        <li>Latitude</li>
+
+        <li>Longitude</li>
+
+        <li>Absolute altitude</li>
+
+        <li>Relative altitude</li>
+
+        <li>Battery percentage</li>
+
+        <li>Flight mode</li>
+
+        <li>Health status</li>
+
+    </ul>
+
+</div>
+<h3>Step 1: Create telemetry.py</h3>
+
+<div class="command-container">
+
+    <pre id="cmd18"><code>touch telemetry.py</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd18', this)">
+        Copy
+    </button>
+
+</div>
+
+<div class="command-container">
+
+    <pre id="cmd19"><code>code telemetry.py</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd19', this)">
+        Copy
+    </button>
+
+</div>
+<h3>Step 2: Write the following code</h3>
+
+<div class="command-container">
+
+<pre id="cmd20"><code>import asyncio
+
+from mavsdk import System
+
+
+async def main():
+
+    drone = System()
+
+    await drone.connect(
+        system_address="udpin://0.0.0.0:14540"
+    )
+
+    print("Waiting for connection...")
+
+    async for state in drone.core.connection_state():
+
+        if state.is_connected:
+
+            print("Connected!")
+
+            break
+
+    print("Reading telemetry data...\n")
+
+    async for position in drone.telemetry.position():
+
+        print(position)
+
+
+if __name__ == "__main__":
+
+    asyncio.run(main())
+</code></pre>
+
+<button class="copy-btn"
+    onclick="copyCode('cmd20', this)">
+    Copy
+</button>
+
+</div>
+<h3>Step 3: Run the program</h3>
+
+<div class="command-container">
+
+    <pre id="cmd21"><code>python telemetry.py</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd21', this)">
+        Copy
+    </button>
+
+</div>
+<h3>Expected Output</h3>
+
+<div class="command-container">
+
+<pre><code>Connected!
+
+Reading telemetry data...
+
+latitude_deg=47.397742
+
+longitude_deg=8.545594
+
+absolute_altitude_m=488.02
+
+relative_altitude_m=0.00
+</code></pre>
+
+</div>
+<h3>Why does telemetry work even when the drone is on the ground?</h3>
+
+<div class="explanation-box">
+
+    <p>
+
+        During this project, a common question was:
+
+    </p>
+
+    <ul>
+
+        <li>
+
+            "How is telemetry data available if the drone is not flying?"
+
+        </li>
+
+    </ul>
+
+</div>
+
+<p>
+
+The answer is simple.
+
+The drone does not need to fly in order to send telemetry data.
+
+As soon as PX4 starts, its sensors begin transmitting information continuously.
+
+</p>
+
+<div class="workflow">
+
+GPS Sensor
+
+<br>⬇<br>
+
+PX4
+
+<br>⬇<br>
+
+MAVLink
+
+<br>⬇<br>
+
+MAVSDK
+
+<br>⬇<br>
+
+Python Program
+
+</div>
 
 
         </div> 
