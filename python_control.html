@@ -379,6 +379,503 @@ writing large amounts of code.
     </tr>
 
 </table>
+<h2>3. Software Architecture</h2>
+
+<p>
+
+The following diagram shows how a Python program communicates
+with the simulated drone.
+
+</p>
+
+<div class="architecture-box">
+
+User
+
+<br>⬇<br>
+
+Python Script
+
+<br>⬇<br>
+
+MAVSDK
+
+<br>⬇<br>
+
+MAVLink
+
+<br>⬇<br>
+
+PX4 Flight Controller (SITL)
+
+<br>⬇<br>
+
+Gazebo Physics Engine
+
+<br>⬇<br>
+
+X500 Drone Model
+
+</div>
+
+<div class="explanation-box">
+
+    <p>Role of each component:</p>
+
+    <ul>
+
+        <li><b>Python Script:</b> Contains the user's code and mission logic.</li>
+
+        <li><b>MAVSDK:</b> Converts Python commands into MAVLink messages.</li>
+
+        <li><b>MAVLink:</b> Communication protocol between the computer and PX4.</li>
+
+        <li><b>PX4 Flight Controller:</b> Controls the drone's motors and flight behaviour.</li>
+
+        <li><b>Gazebo:</b> Simulates real-world physics.</li>
+
+        <li><b>X500 Drone Model:</b> The drone we see flying in simulation.</li>
+
+    </ul>
+
+</div>
+<h2>4. Creating the Project Workspace</h2>
+
+<p>
+
+Before installing MAVSDK, we create a dedicated folder for our drone programs.
+This folder will contain all Python files, virtual environments, and mission scripts.
+
+</p>
+
+<h3>Step 1: Create a new folder</h3>
+
+<div class="command-container">
+
+    <pre id="cmd3"><code>mkdir ~/DronePython</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd3', this)">
+        Copy
+    </button>
+
+</div>
+
+<div class="command-container">
+
+    <pre id="cmd4"><code>cd ~/DronePython</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd4', this)">
+        Copy
+    </button>
+
+</div>
+
+<div class="explanation-box">
+
+    <p>
+
+        The folder <b>DronePython</b> will contain:
+
+    </p>
+
+    <ul>
+
+        <li>Python programs</li>
+
+        <li>Virtual environment</li>
+
+        <li>MAVSDK installation</li>
+
+        <li>Mission scripts</li>
+
+    </ul>
+
+</div>
+<h2>5. Creating a Virtual Environment</h2>
+
+<p>
+
+Ubuntu 24.04 prevents users from installing Python packages directly into the
+system Python installation. Therefore, we create a virtual environment.
+
+</p>
+
+<h3>Step 1: Create the virtual environment</h3>
+
+<div class="command-container">
+
+    <pre id="cmd5"><code>python3 -m venv venv</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd5', this)">
+        Copy
+    </button>
+
+</div>
+
+<h3>Step 2: Activate the environment</h3>
+
+<div class="command-container">
+
+    <pre id="cmd6"><code>source venv/bin/activate</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd6', this)">
+        Copy
+    </button>
+
+</div>
+
+<div class="explanation-box">
+
+    <p>
+
+        After activation, the terminal changes from:
+
+    </p>
+
+    <ul>
+
+        <li>Before:</li>
+
+    </ul>
+
+</div>
+
+<div class="command-container">
+
+    <pre><code>user_laptop:~/DronePython$</code></pre>
+
+</div>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>After:</li>
+
+    </ul>
+
+</div>
+
+<div class="command-container">
+
+    <pre><code>(venv) user_laptop:~/DronePython$</code></pre>
+
+</div>
+<h3>Common Errors and Solutions</h3>
+
+<div class="explanation-box">
+
+    <p>
+
+        Error 1: Command not found
+
+    </p>
+
+    <ul>
+
+        <li>Cause: Python is not installed.</li>
+
+        <li>Solution:</li>
+
+    </ul>
+
+</div>
+
+<div class="command-container">
+
+    <pre id="cmd7"><code>sudo apt install python3 python3-pip python3-venv</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd7', this)">
+        Copy
+    </button>
+
+</div>
+
+<div class="explanation-box">
+
+    <p>
+
+        Error 2: "externally-managed-environment"
+
+    </p>
+
+    <ul>
+
+        <li>
+
+            Ubuntu 24.04 blocks package installation into the system Python.
+
+        </li>
+
+        <li>
+
+            This was the exact error encountered during this project.
+
+        </li>
+
+        <li>
+
+            Solution: Use a virtual environment.
+
+        </li>
+
+    </ul>
+
+</div>
+
+<div class="command-container">
+
+    <pre><code>error: externally-managed-environment</code></pre>
+
+</div>
+<h3>Notes</h3>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>
+
+            Always activate the virtual environment before running drone scripts.
+
+        </li>
+
+        <li>
+
+            The virtual environment must be activated every time a new terminal
+            window is opened.
+
+        </li>
+
+        <li>
+
+            Installing MAVSDK directly into the system Python is not recommended.
+
+        </li>
+
+        <li>
+
+            The virtual environment does not affect Ubuntu or ROS packages.
+
+        </li>
+
+    </ul>
+
+</div>
+<h2>6. Installing MAVSDK</h2>
+
+<p>
+
+MAVSDK (MAV Software Development Kit) is a library that allows Python programs
+to communicate with PX4 using the MAVLink protocol.
+
+Without MAVSDK, we would have to manually create and send MAVLink packets,
+which is difficult and error-prone.
+
+</p>
+
+<h3>Step 1: Activate the virtual environment</h3>
+
+<div class="command-container">
+
+    <pre id="cmd8"><code>cd ~/DronePython</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd8', this)">
+        Copy
+    </button>
+
+</div>
+
+<div class="command-container">
+
+    <pre id="cmd9"><code>source venv/bin/activate</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd9', this)">
+        Copy
+    </button>
+
+</div>
+
+<p>
+
+After activation, your terminal should look similar to:
+
+</p>
+
+<div class="command-container">
+
+    <pre><code>(venv) user@user_laptop:~/DronePython$</code></pre>
+
+</div>
+
+<h3>Step 2: Install MAVSDK</h3>
+
+<div class="command-container">
+
+    <pre id="cmd10"><code>pip install mavsdk</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd10', this)">
+        Copy
+    </button>
+
+</div>
+
+<p>
+
+The installation process may take a few minutes depending on your internet
+connection.
+
+</p>
+<h3>Expected Output</h3>
+
+<div class="command-container">
+
+<pre><code>Collecting mavsdk
+Collecting grpcio
+Collecting protobuf
+
+Successfully installed mavsdk
+</code></pre>
+
+</div>
+<h3>Step 3: Verify MAVSDK Installation</h3>
+
+<p>
+
+To verify that MAVSDK has been installed correctly, run the following command:
+
+</p>
+
+<div class="command-container">
+
+    <pre id="cmd11"><code>pip show mavsdk</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd11', this)">
+        Copy
+    </button>
+
+</div>
+<h3>⚠️ Common Errors and Solutions</h3>
+
+<div class="explanation-box">
+
+    <p>
+
+        Error 1: ModuleNotFoundError
+
+    </p>
+
+    <ul>
+
+        <li>
+
+            Cause: The virtual environment is not activated.
+
+        </li>
+
+        <li>
+
+            Solution:
+
+        </li>
+
+    </ul>
+
+</div>
+
+<div class="command-container">
+
+    <pre id="cmd12"><code>source venv/bin/activate</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd12', this)">
+        Copy
+    </button>
+
+</div>
+
+<div class="command-container">
+
+<pre><code>ModuleNotFoundError: No module named 'mavsdk'
+</code></pre>
+
+</div>
+<div class="explanation-box">
+
+    <p>
+
+        Error 2: "externally-managed-environment"
+
+    </p>
+
+    <ul>
+
+        <li>
+
+            Cause: Trying to install MAVSDK using the Ubuntu system Python.
+
+        </li>
+
+        <li>
+
+            Solution: Create and activate a virtual environment.
+
+        </li>
+
+    </ul>
+
+</div>
+
+<div class="command-container">
+
+<pre><code>error: externally-managed-environment
+</code></pre>
+
+</div>
+<h3>📝 Notes</h3>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>
+
+            MAVSDK must be installed only once inside the virtual environment.
+
+        </li>
+
+        <li>
+
+            Every time you open a new terminal, you must activate the virtual
+            environment again.
+
+        </li>
+
+        <li>
+
+            The virtual environment keeps the project isolated from Ubuntu's
+            system Python.
+
+        </li>
+
+        <li>
+
+            MAVSDK internally communicates with PX4 using MAVLink messages.
+
+        </li>
+
+    </ul>
+
+</div>
 
 
         </div> 
