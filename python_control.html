@@ -1358,6 +1358,415 @@ MAVSDK
 Python Program
 
 </div>
+<h3>Why does telemetry work even when the drone is on the ground?</h3>
+
+<div class="explanation-box">
+
+    <p>
+
+        During this project, a common question was:
+
+    </p>
+
+    <ul>
+
+        <li>
+
+            "How is telemetry data available if the drone is not flying?"
+
+        </li>
+
+    </ul>
+
+</div>
+
+<p>
+
+The answer is simple.
+
+The drone does not need to fly in order to send telemetry data.
+
+As soon as PX4 starts, its sensors begin transmitting information continuously.
+
+</p>
+
+<div class="workflow">
+
+GPS Sensor
+
+<br>⬇<br>
+
+PX4
+
+<br>⬇<br>
+
+MAVLink
+
+<br>⬇<br>
+
+MAVSDK
+
+<br>⬇<br>
+
+Python Program
+
+</div>
+<h3>Step 4: Reading telemetry only once</h3>
+
+<p>
+
+The previous program continuously prints telemetry values.
+
+Sometimes we only need one sample.
+
+</p>
+
+<div class="command-container">
+
+<pre id="cmd22"><code>async for position in drone.telemetry.position():
+
+    print(position)
+
+    break
+</code></pre>
+
+<button class="copy-btn"
+    onclick="copyCode('cmd22', this)">
+    Copy
+</button>
+
+</div>
+
+<p>
+
+The <code>break</code> statement stops the loop after receiving the first telemetry packet.
+
+</p>
+<h3>📝 Notes</h3>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>
+
+            PX4 continuously sends telemetry even when the drone is stationary.
+
+        </li>
+
+        <li>
+
+            Telemetry data comes from sensors such as GPS and IMU.
+
+        </li>
+
+        <li>
+
+            <code>async for</code> listens for a stream of incoming data.
+
+        </li>
+
+        <li>
+
+            The <code>break</code> statement stops the loop.
+
+        </li>
+
+    </ul>
+
+</div>
+<h2>9. Health Monitoring</h2>
+
+<p>
+
+Before taking off, PX4 checks whether all important systems are working properly.
+
+This process is called a <b>health check</b> or <b>preflight check</b>.
+
+If any check fails, the drone will refuse to arm.
+
+</p>
+
+<div class="explanation-box">
+
+    <p>
+
+        Before arming, PX4 verifies:
+
+    </p>
+
+    <ul>
+
+        <li>GPS availability.</li>
+
+        <li>Home position initialization.</li>
+
+        <li>Sensor health.</li>
+
+        <li>Communication status.</li>
+
+        <li>Battery status.</li>
+
+    </ul>
+
+</div>
+<h3>Step 1: Create health.py</h3>
+
+<div class="command-container">
+
+    <pre id="cmd23"><code>touch health.py</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd23', this)">
+        Copy
+    </button>
+
+</div>
+
+<div class="command-container">
+
+    <pre id="cmd24"><code>code health.py</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd24', this)">
+        Copy
+    </button>
+
+</div>
+<h3>Step 2: Write the following code</h3>
+
+<div class="command-container">
+
+<pre id="cmd25"><code>import asyncio
+
+from mavsdk import System
+
+
+async def main():
+
+    drone = System()
+
+    await drone.connect(
+        system_address="udpin://0.0.0.0:14540"
+    )
+
+    print("Waiting for connection...")
+
+    async for state in drone.core.connection_state():
+
+        if state.is_connected:
+
+            print("Connected!")
+
+            break
+
+    print("Checking drone health...\n")
+
+    async for health in drone.telemetry.health():
+
+        print(health)
+
+        break
+
+
+if __name__ == "__main__":
+
+    asyncio.run(main())
+</code></pre>
+
+<button class="copy-btn"
+    onclick="copyCode('cmd25', this)">
+    Copy
+</button>
+
+</div>
+<h3>Step 3: Run the program</h3>
+
+<div class="command-container">
+
+    <pre id="cmd26"><code>python health.py</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd26', this)">
+        Copy
+    </button>
+
+</div>
+<h3>Expected Output</h3>
+
+<div class="command-container">
+
+<pre><code>Connected!
+
+Checking drone health...
+
+is_global_position_ok=True
+
+is_home_position_ok=True
+</code></pre>
+
+</div>
+<h3>Understanding the Health Parameters</h3>
+
+<table>
+
+<tr>
+
+    <th>Parameter</th>
+
+    <th>Meaning</th>
+
+</tr>
+
+<tr>
+
+    <td>is_global_position_ok</td>
+
+    <td>Checks whether the GPS position is valid.</td>
+
+</tr>
+
+<tr>
+
+    <td>is_home_position_ok</td>
+
+    <td>Checks whether PX4 has initialized the home position.</td>
+
+</tr>
+
+</table>
+<h3>Why are health checks important?</h3>
+
+<p>
+
+Imagine the drone tries to take off before GPS initialization is complete.
+
+The autopilot will not know:
+
+</p>
+
+<ul>
+
+    <li>Its current position.</li>
+
+    <li>Its home location.</li>
+
+    <li>Where to return during an emergency.</li>
+
+</ul>
+
+<p>
+
+Therefore, PX4 blocks arming until these checks pass.
+
+</p>
+<h3>⚠️ Common Errors and Solutions</h3>
+
+<div class="explanation-box">
+
+    <p>
+
+        Error 1: Drone refuses to arm.
+
+    </p>
+
+</div>
+
+<div class="command-container">
+
+<pre><code>WARN [commander] Arming denied:
+Resolve system health failures first
+</code></pre>
+
+</div>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>Cause: One or more health checks failed.</li>
+
+        <li>Solution: Wait until all health parameters become True.</li>
+
+    </ul>
+
+</div>
+<div class="explanation-box">
+
+    <p>
+
+        Error 2: No connection to the ground station.
+
+    </p>
+
+</div>
+
+<div class="command-container">
+
+<pre><code>WARN [health_and_arming_checks]
+Preflight Fail: No connection to the GCS
+</code></pre>
+
+</div>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>
+
+            GCS stands for <b>Ground Control Station</b>.
+
+        </li>
+
+        <li>
+
+            In our setup, QGroundControl acts as the Ground Control Station.
+
+        </li>
+
+        <li>
+
+            Start QGroundControl before attempting to arm the drone.
+
+        </li>
+
+    </ul>
+
+</div>
+<h3>📝 Notes</h3>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>
+
+            Health monitoring should always be performed before takeoff.
+
+        </li>
+
+        <li>
+
+            A successful connection does not guarantee that the drone is ready to fly.
+
+        </li>
+
+        <li>
+
+            PX4 may refuse to arm if GPS or home position initialization is incomplete.
+
+        </li>
+
+        <li>
+
+            QGroundControl serves as the Ground Control Station (GCS).
+
+        </li>
+
+    </ul>
+
+</div>
 
 
         </div> 
