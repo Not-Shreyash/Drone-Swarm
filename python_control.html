@@ -1767,6 +1767,1044 @@ Preflight Fail: No connection to the GCS
     </ul>
 
 </div>
+<h2>10. Our First Autonomous Mission</h2>
+
+<p>
+
+In the previous chapters, we learned how to connect to the drone and verify
+its health status. We are now ready to write our first autonomous mission.
+
+The mission will perform the following steps automatically:
+
+</p>
+
+<div class="workflow">
+
+Connect to the drone
+
+<br>⬇<br>
+
+Check health status
+
+<br>⬇<br>
+
+Arm the drone
+
+<br>⬇<br>
+
+Take off
+
+<br>⬇<br>
+
+Hover for 10 seconds
+
+<br>⬇<br>
+
+Land safely
+
+</div>
+<h3>Step 1: Create mission1.py</h3>
+
+<div class="command-container">
+
+    <pre id="cmd27"><code>touch mission1.py</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd27', this)">
+        Copy
+    </button>
+
+</div>
+
+<div class="command-container">
+
+    <pre id="cmd28"><code>code mission1.py</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd28', this)">
+        Copy
+    </button>
+
+</div>
+<h3>Step 2: Write the following code</h3>
+
+<div class="command-container">
+
+<pre id="cmd29"><code>import asyncio
+
+from mavsdk import System
+
+
+async def main():
+
+    drone = System()
+
+    await drone.connect(
+        system_address="udpin://0.0.0.0:14540"
+    )
+
+    print("Waiting for connection...")
+
+    async for state in drone.core.connection_state():
+
+        if state.is_connected:
+
+            print("Connected!")
+
+            break
+
+    print("Waiting for health checks...")
+
+    async for health in drone.telemetry.health():
+
+        if health.is_global_position_ok and health.is_home_position_ok:
+
+            print("Drone is ready.")
+
+            break
+
+    print("Arming...")
+
+    await drone.action.arm()
+
+    print("Taking off...")
+
+    await drone.action.takeoff()
+
+    print("Hovering for 10 seconds...")
+
+    await asyncio.sleep(10)
+
+    print("Landing...")
+
+    await drone.action.land()
+
+
+if __name__ == "__main__":
+
+    asyncio.run(main())
+</code></pre>
+
+<button class="copy-btn"
+    onclick="copyCode('cmd29', this)">
+    Copy
+</button>
+
+</div>
+<h3>Step 3: Run the mission</h3>
+
+<div class="command-container">
+
+    <pre id="cmd30"><code>python mission1.py</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd30', this)">
+        Copy
+    </button>
+
+</div>
+<h3>Understanding the Program</h3>
+
+<table>
+
+<tr>
+
+    <th>Command</th>
+
+    <th>Purpose</th>
+
+</tr>
+
+<tr>
+
+    <td>drone.connect()</td>
+
+    <td>Connects Python to PX4.</td>
+
+</tr>
+
+<tr>
+
+    <td>drone.telemetry.health()</td>
+
+    <td>Checks whether the drone is ready.</td>
+
+</tr>
+
+<tr>
+
+    <td>drone.action.arm()</td>
+
+    <td>Arms the drone.</td>
+
+</tr>
+
+<tr>
+
+    <td>drone.action.takeoff()</td>
+
+    <td>Starts the takeoff sequence.</td>
+
+</tr>
+
+<tr>
+
+    <td>asyncio.sleep(10)</td>
+
+    <td>Keeps the drone hovering.</td>
+
+</tr>
+
+<tr>
+
+    <td>drone.action.land()</td>
+
+    <td>Commands the drone to land.</td>
+
+</tr>
+
+</table>
+<h3>Commands vs Drone State</h3>
+
+<div class="explanation-box">
+
+    <p>
+
+        A command being accepted does not mean that the drone has already
+        completed the action.
+
+    </p>
+
+</div>
+
+<p>
+
+For example:
+
+</p>
+
+<div class="command-container">
+
+<pre><code>await drone.action.takeoff()
+</code></pre>
+
+</div>
+
+<p>
+
+This line only means that PX4 has accepted the takeoff command.
+
+It does not guarantee that the drone has already reached its target altitude.
+
+</p>
+<h3>Question Encountered During Development</h3>
+
+<div class="explanation-box">
+
+    <p>
+
+        A common beginner question is:
+
+    </p>
+
+    <ul>
+
+        <li>
+
+            "If the program executes takeoff(), has the drone already finished taking off?"
+
+        </li>
+
+    </ul>
+
+</div>
+
+<p>
+
+The answer is <b>no</b>.
+
+The drone may still be on the ground or may just be beginning its climb.
+
+</p>
+<h3>⚠️ Common Errors and Solutions</h3>
+
+<div class="explanation-box">
+
+    <p>
+
+        Error 1: Drone automatically disarms.
+
+    </p>
+
+</div>
+
+<div class="command-container">
+
+<pre><code>INFO [commander]
+Disarmed by auto preflight disarming
+</code></pre>
+
+</div>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>
+
+            Cause: The drone remained armed for too long without taking off.
+
+        </li>
+
+        <li>
+
+            Solution: Minimize the delay between arming and takeoff.
+
+        </li>
+
+    </ul>
+
+</div>
+<div class="explanation-box">
+
+    <p>
+
+        Error 2: Arming denied.
+
+    </p>
+
+</div>
+
+<div class="command-container">
+
+<pre><code>WARN [commander]
+Arming denied:
+Resolve system health failures first
+</code></pre>
+
+</div>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>
+
+            Cause: One or more health checks failed.
+
+        </li>
+
+        <li>
+
+            Solution: Wait for GPS and home position initialization.
+
+        </li>
+
+    </ul>
+
+</div>
+<h3>📝 Notes</h3>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>
+
+            Autonomous missions are simply sequences of commands.
+
+        </li>
+
+        <li>
+
+            The drone must pass health checks before arming.
+
+        </li>
+
+        <li>
+
+            The takeoff command does not wait for the drone to reach its target altitude.
+
+        </li>
+
+        <li>
+
+            PX4 may automatically disarm the drone if it remains idle for too long.
+
+        </li>
+
+    </ul>
+
+</div>
+<h3>🎯 Challenge for the Reader</h3>
+
+<div class="explanation-box">
+
+    <p>
+
+        Try changing the hovering time in the following line:
+
+    </p>
+
+</div>
+
+<div class="command-container">
+
+<pre><code>await asyncio.sleep(10)
+</code></pre>
+
+</div>
+
+<p>
+
+Replace <b>10</b> with <b>2</b>:
+
+</p>
+
+<div class="command-container">
+
+<pre><code>await asyncio.sleep(2)
+</code></pre>
+
+</div>
+
+<div class="explanation-box">
+
+    <p>
+
+        Think about the following questions before running the program:
+
+    </p>
+
+    <ul>
+
+        <li>Will the drone still take off normally?</li>
+
+        <li>How long will it remain in the air?</li>
+
+        <li>Will the landing procedure start earlier?</li>
+
+        <li>What would happen if the value were changed to <b>0</b>?</li>
+
+    </ul>
+
+</div>
+
+<p>
+
+Run the program and compare your observations with your predictions.
+
+This is an important habit in robotics: always try to predict the behavior of the system before executing the code.
+
+</p>
+<h2>11. Open-Loop vs Closed-Loop Control</h2>
+
+<p>
+
+In the previous chapter, our drone followed a fixed sequence of commands:
+
+</p>
+
+<div class="workflow">
+
+Arm
+
+<br>⬇<br>
+
+Take off
+
+<br>⬇<br>
+
+Wait 10 seconds
+
+<br>⬇<br>
+
+Land
+
+</div>
+
+<p>
+
+The program never checked whether the drone had actually reached the desired altitude. It simply trusted that everything would work correctly.
+
+This type of control is called <b>open-loop control</b>.
+
+</p>
+<h3>Open-Loop Control</h3>
+
+<div class="explanation-box">
+
+    <p>
+
+        In open-loop control, the controller sends commands but does not verify whether the drone has reached the desired state.
+
+    </p>
+
+</div>
+
+<table>
+
+<tr>
+
+    <th>Characteristic</th>
+
+    <th>Open-Loop Control</th>
+
+</tr>
+
+<tr>
+
+    <td>Uses sensor feedback</td>
+
+    <td>No</td>
+
+</tr>
+
+<tr>
+
+    <td>Checks the actual position</td>
+
+    <td>No</td>
+
+</tr>
+
+<tr>
+
+    <td>Simple to implement</td>
+
+    <td>Yes</td>
+
+</tr>
+
+<tr>
+
+    <td>Reliable</td>
+
+    <td>Less reliable</td>
+
+</tr>
+
+</table>
+<h3>Closed-Loop Control</h3>
+
+<p>
+
+In closed-loop control, the drone continuously sends sensor data back to the program.
+
+The program uses this feedback to decide what to do next.
+
+</p>
+
+<div class="workflow">
+
+Send command
+
+<br>⬇<br>
+
+Drone moves
+
+<br>⬇<br>
+
+Sensors measure position
+
+<br>⬇<br>
+
+Python reads telemetry
+
+<br>⬇<br>
+
+Decision
+
+</div>
+<h3>Example</h3>
+
+<p>
+
+Suppose we want the drone to climb to an altitude of 5 meters.
+
+</p>
+
+<p>
+
+<b>Open-loop approach:</b>
+
+</p>
+
+<div class="command-container">
+
+<pre><code>await drone.action.takeoff()
+
+await asyncio.sleep(10)
+</code></pre>
+
+</div>
+
+<p>
+
+We simply assume that the drone reaches the target altitude.
+
+</p>
+
+<p>
+
+<b>Closed-loop approach:</b>
+
+</p>
+
+<div class="command-container">
+
+<pre><code>while current_altitude < 5:
+
+    read telemetry
+
+    wait
+</code></pre>
+
+</div>
+
+<p>
+
+Now the program waits until the drone actually reaches the desired altitude.
+
+</p>
+<h3>Why do real drones use closed-loop control?</h3>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>Wind may push the drone.</li>
+
+        <li>GPS measurements may fluctuate.</li>
+
+        <li>Motors may behave differently.</li>
+
+        <li>Battery voltage changes over time.</li>
+
+        <li>Sensor readings are never perfect.</li>
+
+    </ul>
+
+</div>
+
+<p>
+
+Without feedback, autonomous flight would be unsafe.
+
+</p>
+<h3>Connection to Drone Swarms</h3>
+
+<p>
+
+Closed-loop control is the foundation of:
+
+</p>
+
+<ul>
+
+    <li>Waypoint navigation.</li>
+
+    <li>Circular trajectories.</li>
+
+    <li>Formation flying.</li>
+
+    <li>Obstacle avoidance.</li>
+
+    <li>Multi-drone coordination.</li>
+
+</ul>
+
+<p>
+
+In the upcoming chapters, we will use telemetry and feedback to make the drone follow a circular trajectory.
+
+</p>
+<h3>🎯 Challenge for the Reader</h3>
+
+<div class="explanation-box">
+
+    <p>
+
+        Imagine that a strong wind prevents the drone from reaching 5 meters.
+
+    </p>
+
+    <ul>
+
+        <li>Will open-loop control notice the problem?</li>
+
+        <li>Will closed-loop control notice the problem?</li>
+
+        <li>Which system would be safer?</li>
+
+    </ul>
+
+</div>
+<h3>📝 Notes</h3>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>Open-loop control sends commands without checking the result.</li>
+
+        <li>Closed-loop control uses sensor feedback.</li>
+
+        <li>Most autonomous robots use closed-loop control.</li>
+
+        <li>Swarm robotics heavily relies on feedback loops.</li>
+
+    </ul>
+
+</div>
+<h2>12. Our First Closed-Loop Program</h2>
+
+<p>
+
+In the previous mission, we assumed that the drone had completed takeoff after
+waiting for a fixed amount of time.
+
+However, in robotics, assumptions are dangerous.
+
+In this chapter, we will use telemetry data to continuously monitor the drone's
+altitude and wait until it actually reaches the desired height.
+
+</p>
+
+<div class="workflow">
+
+Connect
+
+<br>⬇<br>
+
+Check health
+
+<br>⬇<br>
+
+Arm
+
+<br>⬇<br>
+
+Take off
+
+<br>⬇<br>
+
+Read altitude continuously
+
+<br>⬇<br>
+
+Reach target altitude
+
+<br>⬇<br>
+
+Land
+
+</div>
+<h3>Step 1: Create altitude_monitor.py</h3>
+
+<div class="command-container">
+
+    <pre id="cmd31"><code>touch altitude_monitor.py</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd31', this)">
+        Copy
+    </button>
+
+</div>
+
+<div class="command-container">
+
+    <pre id="cmd32"><code>code altitude_monitor.py</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd32', this)">
+        Copy
+    </button>
+
+</div>
+<h3>Step 2: Write the following code</h3>
+
+<div class="command-container">
+
+<pre id="cmd33"><code>import asyncio
+
+from mavsdk import System
+
+
+TARGET_ALTITUDE = 2.0
+
+
+async def main():
+
+    drone = System()
+
+    await drone.connect(
+        system_address="udpin://0.0.0.0:14540"
+    )
+
+    print("Waiting for connection...")
+
+    async for state in drone.core.connection_state():
+
+        if state.is_connected:
+
+            print("Connected!")
+
+            break
+
+    print("Waiting for health checks...")
+
+    async for health in drone.telemetry.health():
+
+        if health.is_global_position_ok and health.is_home_position_ok:
+
+            print("Drone is ready.")
+
+            break
+
+    print("Arming...")
+
+    await drone.action.arm()
+
+    print("Taking off...")
+
+    await drone.action.takeoff()
+
+    print("Waiting to reach target altitude...")
+
+    async for position in drone.telemetry.position():
+
+        altitude = position.relative_altitude_m
+
+        print(
+            f"Current altitude: "
+            f"{altitude:.2f} m"
+        )
+
+        if altitude >= TARGET_ALTITUDE:
+
+            print(
+                "Target altitude reached!"
+            )
+
+            break
+
+    print("Landing...")
+
+    await drone.action.land()
+
+
+if __name__ == "__main__":
+
+    asyncio.run(main())
+</code></pre>
+
+<button class="copy-btn"
+    onclick="copyCode('cmd33', this)">
+    Copy
+</button>
+
+</div>
+<h3>Understanding TARGET_ALTITUDE</h3>
+
+<div class="command-container">
+
+<pre><code>TARGET_ALTITUDE = 2.0
+</code></pre>
+
+</div>
+
+<p>
+
+This variable stores the altitude that we want the drone to reach.
+
+The value is measured in meters.
+
+</p>
+<h3>Reading altitude data</h3>
+
+<div class="command-container">
+
+<pre><code>altitude = position.relative_altitude_m
+</code></pre>
+
+</div>
+
+<p>
+
+The drone continuously sends its current altitude.
+
+The value is measured relative to the takeoff point.
+
+</p>
+<h3>Making decisions</h3>
+
+<div class="command-container">
+
+<pre><code>if altitude >= TARGET_ALTITUDE:
+
+    print("Target altitude reached!")
+
+    break
+</code></pre>
+
+</div>
+
+<p>
+
+This is the heart of closed-loop control.
+
+Instead of blindly waiting, the program continuously measures the drone's state and makes decisions based on sensor data.
+
+</p>
+<h3>Expected Output</h3>
+
+<div class="command-container">
+
+<pre><code>Connected!
+
+Drone is ready.
+
+Arming...
+
+Taking off...
+
+Waiting to reach target altitude...
+
+Current altitude: 0.25 m
+
+Current altitude: 0.84 m
+
+Current altitude: 1.42 m
+
+Current altitude: 2.01 m
+
+Target altitude reached!
+
+Landing...
+</code></pre>
+
+</div>
+<h3>⚠️ Common Errors and Solutions</h3>
+
+<div class="explanation-box">
+
+    <p>
+
+        Error 1: The altitude keeps printing forever.
+
+    </p>
+
+    <ul>
+
+        <li>
+
+            The target altitude may be too high.
+
+        </li>
+
+        <li>
+
+            Check whether the drone can actually reach that height.
+
+        </li>
+
+    </ul>
+
+</div>
+<div class="explanation-box">
+
+    <p>
+
+        Error 2: The drone lands immediately.
+
+    </p>
+
+    <ul>
+
+        <li>
+
+            The chosen target altitude may be too low.
+
+        </li>
+
+        <li>
+
+            Verify the value of <code>TARGET_ALTITUDE</code>.
+
+        </li>
+
+    </ul>
+
+</div>
+<h3>🔬 Experiment</h3>
+
+<div class="explanation-box">
+
+    <p>
+
+        Modify the following line:
+
+    </p>
+
+</div>
+
+<div class="command-container">
+
+<pre><code>TARGET_ALTITUDE = 2.0
+</code></pre>
+
+</div>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>Try 1 meter.</li>
+
+        <li>Try 3 meters.</li>
+
+        <li>Try 5 meters.</li>
+
+        <li>Observe how long the drone takes to reach each altitude.</li>
+
+    </ul>
+
+</div>
+<h3>📝 Notes</h3>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>
+
+            Closed-loop control uses sensor feedback.
+
+        </li>
+
+        <li>
+
+            The program continuously reads telemetry data.
+
+        </li>
+
+        <li>
+
+            Autonomous navigation depends on such feedback loops.
+
+        </li>
+
+        <li>
+
+            Circular trajectories and drone swarms use this same principle.
+
+        </li>
+
+    </ul>
+
+</div>
 
 
         </div> 
