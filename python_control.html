@@ -4776,14 +4776,17 @@ Display trajectory
     </ul>
 
 </div>
+
 <h2>19. Easy Trajectory Visualization Using Python</h2>
 
 <p>
 
-Instead of using ROS markers, we can save the drone positions in a file and
-draw the trajectory later using Python.
+Gazebo does not automatically display the trajectory followed by the drone.
 
-This method is simple and beginner-friendly.
+A simple beginner-friendly solution is to save the drone coordinates in a text
+file and later plot them using Python.
+
+This method does not require ROS 2 or any Gazebo plugins.
 
 </p>
 
@@ -4793,15 +4796,289 @@ Drone flies
 
 <br>⬇<br>
 
+Calculate coordinates
+
+<br>⬇<br>
+
 Save coordinates
 
 <br>⬇<br>
 
-Store in file
+Store in a file
 
 <br>⬇<br>
 
-Plot trajectory
+Plot the trajectory
+
+</div>
+
+<h3>Step 1: Create a file to store the trajectory</h3>
+
+<p>
+
+Open <code>circle_flight.py</code> and add the following code before the
+circular trajectory loop.
+
+</p>
+
+<div class="command-container">
+
+    <pre id="cmd56"><code>trajectory_file = open(
+
+    "trajectory.txt",
+
+    "w"
+
+)</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd56', this)">
+        Copy
+    </button>
+
+</div>
+
+<div class="explanation-box">
+
+    <p>
+
+        This command creates a new file named
+        <code>trajectory.txt</code>.
+
+    </p>
+
+    <ul>
+
+        <li>If the file does not exist, Python creates it.</li>
+
+        <li>If the file already exists, its contents are erased.</li>
+
+        <li>The <code>"w"</code> mode stands for <b>write mode</b>.</li>
+
+    </ul>
+
+</div>
+
+<h3>Step 2: Save the drone coordinates</h3>
+
+<p>
+
+Locate the following section inside your trajectory loop:
+
+</p>
+
+<div class="command-container">
+
+    <pre><code>x = RADIUS * math.cos(theta)
+
+y = RADIUS * math.sin(theta)</code></pre>
+
+</div>
+
+<p>
+
+Immediately below it, add:
+
+</p>
+
+<div class="command-container">
+
+    <pre id="cmd57"><code>trajectory_file.write(
+
+    f"{x} {y}\n"
+
+)</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd57', this)">
+        Copy
+    </button>
+
+</div>
+
+<div class="explanation-box">
+
+    <p>
+
+        During every iteration of the loop, Python writes the current
+        coordinates into the file.
+
+    </p>
+
+    <p>
+
+        Example:
+
+    </p>
+
+    <ul>
+
+        <li>First point → <code>3.0 0.0</code></li>
+
+        <li>Second point → <code>2.95 0.52</code></li>
+
+        <li>Third point → <code>2.82 1.03</code></li>
+
+    </ul>
+
+</div>
+
+<h3>Updated trajectory loop</h3>
+
+<div class="command-container">
+
+    <pre id="cmd58"><code>for angle in range(
+
+    0,
+
+    361,
+
+    STEP
+
+):
+
+    theta = math.radians(
+
+        angle
+
+    )
+
+    x = RADIUS * math.cos(
+
+        theta
+
+    )
+
+    y = RADIUS * math.sin(
+
+        theta
+
+    )
+
+    trajectory_file.write(
+
+        f"{x} {y}\n"
+
+    )
+
+    await drone.offboard.set_position_ned(
+
+        PositionNedYaw(
+
+            x,
+
+            y,
+
+            ALTITUDE,
+
+            angle
+
+        )
+
+    )
+
+    await asyncio.sleep(
+
+        0.5
+
+    )</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd58', this)">
+        Copy
+    </button>
+
+</div>
+
+<h3>Step 3: Close the file</h3>
+
+<p>
+
+Before the landing command, add:
+
+</p>
+
+<div class="command-container">
+
+    <pre id="cmd59"><code>trajectory_file.close()</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd59', this)">
+        Copy
+    </button>
+
+</div>
+
+<div class="explanation-box">
+
+    <p>
+
+        Closing the file ensures that all coordinates are saved correctly.
+
+    </p>
+
+</div>
+
+<h3>Expected Output File</h3>
+
+<p>
+
+After the drone completes its mission, a new file named
+<code>trajectory.txt</code> will appear in your project folder.
+
+</p>
+
+<div class="command-container">
+
+    <pre><code>3.0 0.0
+
+2.95 0.52
+
+2.82 1.03
+
+2.60 1.50
+
+2.30 1.93
+
+...</code></pre>
+
+</div>
+
+<h3>⚠️ Notes and Common Mistakes</h3>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>
+
+            Do not forget to call
+            <code>trajectory_file.close()</code>.
+
+        </li>
+
+        <li>
+
+            Make sure that
+            <code>trajectory_file.write()</code>
+            is inside the loop.
+
+        </li>
+
+        <li>
+
+            If the file remains empty, check the indentation carefully.
+
+        </li>
+
+        <li>
+
+            The file is created in the same folder as
+            <code>circle_flight.py</code>.
+
+        </li>
+
+    </ul>
 
 </div>
 
