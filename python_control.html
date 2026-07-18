@@ -2805,6 +2805,2006 @@ Landing...
     </ul>
 
 </div>
+<h2>13. Waypoint Navigation</h2>
+
+<p>
+
+Until now, our drone has only moved vertically. However, autonomous drones must
+also move horizontally.
+
+To achieve this, we use <b>waypoints</b>.
+
+A waypoint is simply a target location that the drone tries to reach.
+
+</p>
+
+<div class="workflow">
+
+Current Position
+
+<br>⬇<br>
+
+Waypoint 1
+
+<br>⬇<br>
+
+Waypoint 2
+
+<br>⬇<br>
+
+Waypoint 3
+
+<br>⬇<br>
+
+Destination
+
+</div>
+<h3>Coordinate System</h3>
+
+<p>
+
+PX4 represents the drone's position using three coordinates:
+
+</p>
+
+<table>
+
+<tr>
+
+    <th>Axis</th>
+
+    <th>Meaning</th>
+
+</tr>
+
+<tr>
+
+    <td>X</td>
+
+    <td>Forward and backward movement</td>
+
+</tr>
+
+<tr>
+
+    <td>Y</td>
+
+    <td>Left and right movement</td>
+
+</tr>
+
+<tr>
+
+    <td>Z</td>
+
+    <td>Up and down movement</td>
+
+</tr>
+
+</table>
+<h3>Drone Coordinate System</h3>
+
+<div class="architecture-box">
+
+<pre>
+                 +Z (up)
+                    ↑
+                    |
+                    |
+                    ● ─────→ +X (forward)
+                   /
+                  /
+                 /
+         +Y (right)
+
+</pre>
+
+</div>
+<h3>How will we make the drone fly in a circle?</h3>
+
+<p>
+
+A circle can be approximated by many small waypoints.
+
+The Python script will repeatedly calculate:
+
+</p>
+
+<div class="command-container">
+
+<pre><code>x = R × cos(θ)
+
+y = R × sin(θ)
+</code></pre>
+
+</div>
+
+<p>
+
+where:
+
+</p>
+
+<table>
+
+<tr>
+
+    <th>Symbol</th>
+
+    <th>Meaning</th>
+
+</tr>
+
+<tr>
+
+    <td>R</td>
+
+    <td>Radius of the circle</td>
+
+</tr>
+
+<tr>
+
+    <td>θ</td>
+
+    <td>Current angle</td>
+
+</tr>
+
+<tr>
+
+    <td>x</td>
+
+    <td>X coordinate</td>
+
+</tr>
+
+<tr>
+
+    <td>y</td>
+
+    <td>Y coordinate</td>
+
+</tr>
+
+</table>
+<h3>Example</h3>
+
+<p>
+
+Suppose:
+
+</p>
+
+<div class="command-container">
+
+<pre><code>R = 5 m
+
+θ = 90°
+</code></pre>
+
+</div>
+
+<p>
+
+Then:
+
+</p>
+
+<div class="command-container">
+
+<pre><code>x = 5 × cos(90°) = 0
+
+y = 5 × sin(90°) = 5
+</code></pre>
+
+</div>
+
+<p>
+
+Therefore, the waypoint is:
+
+</p>
+
+<div class="command-container">
+
+<pre><code>(0, 5)</code></pre>
+
+</div>
+<h3>🎯 Challenge for the Reader</h3>
+
+<div class="explanation-box">
+
+    <p>
+
+        Compute the waypoint coordinates for:
+
+    </p>
+
+    <ul>
+
+        <li>R = 3 m and θ = 0°</li>
+
+        <li>R = 3 m and θ = 180°</li>
+
+        <li>R = 3 m and θ = 270°</li>
+
+    </ul>
+
+</div>
+<h3>📝 Notes</h3>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>
+
+            A waypoint is a target location.
+
+        </li>
+
+        <li>
+
+            A circle is composed of many waypoints.
+
+        </li>
+
+        <li>
+
+            The trigonometric functions <code>sin()</code> and <code>cos()</code>
+            are used to calculate those waypoints.
+
+        </li>
+
+        <li>
+
+            The next chapter will implement these equations in Python.
+
+        </li>
+
+    </ul>
+
+</div>
+<h2>14. The Mathematics Behind Circular Motion</h2>
+
+<p>
+
+To make the drone fly in a circle, we need to calculate the coordinates of many
+small waypoints around the circumference.
+
+Python provides a built-in module called <b>math</b> that helps us perform these
+calculations.
+
+</p>
+
+<div class="workflow">
+
+Choose radius
+
+<br>⬇<br>
+
+Choose angle
+
+<br>⬇<br>
+
+Compute x-coordinate
+
+<br>⬇<br>
+
+Compute y-coordinate
+
+<br>⬇<br>
+
+Send waypoint to drone
+
+</div>
+<h3>Importing the math module</h3>
+
+<div class="command-container">
+
+<pre id="cmd34"><code>import math
+</code></pre>
+
+<button class="copy-btn"
+    onclick="copyCode('cmd34', this)">
+    Copy
+</button>
+
+</div>
+
+<p>
+
+The <code>math</code> module gives us access to functions such as:
+
+</p>
+
+<ul>
+
+    <li><code>math.sin()</code></li>
+
+    <li><code>math.cos()</code></li>
+
+    <li><code>math.pi</code></li>
+
+    <li><code>math.radians()</code></li>
+
+</ul>
+<h3>Importing the math module</h3>
+
+<div class="command-container">
+
+<pre id="cmd34"><code>import math
+</code></pre>
+
+<button class="copy-btn"
+    onclick="copyCode('cmd34', this)">
+    Copy
+</button>
+
+</div>
+
+<p>
+
+The <code>math</code> module gives us access to functions such as:
+
+</p>
+
+<ul>
+
+    <li><code>math.sin()</code></li>
+
+    <li><code>math.cos()</code></li>
+
+    <li><code>math.pi</code></li>
+
+    <li><code>math.radians()</code></li>
+
+</ul>
+<h3>Degrees vs Radians</h3>
+
+<table>
+
+<tr>
+
+    <th>Degrees</th>
+
+    <th>Radians</th>
+
+</tr>
+
+<tr>
+
+    <td>0°</td>
+
+    <td>0</td>
+
+</tr>
+
+<tr>
+
+    <td>90°</td>
+
+    <td>π / 2</td>
+
+</tr>
+
+<tr>
+
+    <td>180°</td>
+
+    <td>π</td>
+
+</tr>
+
+<tr>
+
+    <td>270°</td>
+
+    <td>3π / 2</td>
+
+</tr>
+
+<tr>
+
+    <td>360°</td>
+
+    <td>2π</td>
+
+</tr>
+
+</table>
+<h3>Computing the Waypoints</h3>
+
+<div class="command-container">
+
+<pre id="cmd36"><code>import math
+
+radius = 5
+
+theta = math.radians(90)
+
+x = radius * math.cos(theta)
+
+y = radius * math.sin(theta)
+
+print(x)
+
+print(y)
+</code></pre>
+
+<button class="copy-btn"
+    onclick="copyCode('cmd36', this)">
+    Copy
+</button>
+
+</div>
+<h3>Expected Output</h3>
+
+<div class="command-container">
+
+<pre><code>0.0
+
+5.0
+</code></pre>
+
+</div>
+<h3>Why are radians important?</h3>
+
+<div class="explanation-box">
+
+    <p>
+
+        The functions <code>math.sin()</code> and <code>math.cos()</code>
+        expect their input in radians, not degrees.
+
+    </p>
+
+</div>
+
+<div class="command-container">
+
+<pre><code>theta = math.radians(90)
+</code></pre>
+
+</div>
+
+<p>
+
+This converts 90 degrees into the format required by Python.
+
+</p>
+<h3>🔬 Experiment</h3>
+
+<div class="explanation-box">
+
+    <p>
+
+        Change the value of <code>theta</code> and observe the coordinates.
+
+    </p>
+
+    <ul>
+
+        <li>0°</li>
+
+        <li>45°</li>
+
+        <li>180°</li>
+
+        <li>270°</li>
+
+    </ul>
+
+</div>
+<h3>📝 Notes</h3>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>
+
+            Circular motion is generated using trigonometry.
+
+        </li>
+
+        <li>
+
+            Python provides these functions through the
+            <code>math</code> module.
+
+        </li>
+
+        <li>
+
+            Angles must be converted to radians.
+
+        </li>
+
+        <li>
+
+            The circle-following algorithm will repeatedly compute
+            new values of <code>x</code> and <code>y</code>.
+
+        </li>
+
+    </ul>
+
+</div>
+<h2>15. Generating a Circular Trajectory</h2>
+
+<p>
+
+In the previous chapter, we learned how to calculate a single point on a circle.
+
+Now, we will generate many points one after another.
+
+When these points are connected together, they form a circular trajectory.
+
+</p>
+
+<div class="workflow">
+
+Choose radius
+
+<br>⬇<br>
+
+Choose angle
+
+<br>⬇<br>
+
+Calculate x and y
+
+<br>⬇<br>
+
+Store the point
+
+<br>⬇<br>
+
+Increase the angle
+
+<br>⬇<br>
+
+Repeat
+
+</div>
+<h3>Step 1: Create circle_points.py</h3>
+
+<div class="command-container">
+
+    <pre id="cmd37"><code>touch circle_points.py</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd37', this)">
+        Copy
+    </button>
+
+</div>
+
+<div class="command-container">
+
+    <pre id="cmd38"><code>code circle_points.py</code></pre>
+
+    <button class="copy-btn"
+        onclick="copyCode('cmd38', this)">
+        Copy
+    </button>
+
+</div>
+<h3>Step 2: Generate the points</h3>
+
+<div class="command-container">
+
+<pre id="cmd39"><code>import math
+
+radius = 5
+
+for angle in range(0, 361, 30):
+
+    theta = math.radians(angle)
+
+    x = radius * math.cos(theta)
+
+    y = radius * math.sin(theta)
+
+    print(
+        f"Angle: {angle:3d}°"
+        f"  ->  "
+        f"x = {x:.2f}, "
+        f"y = {y:.2f}"
+    )
+</code></pre>
+
+<button class="copy-btn"
+    onclick="copyCode('cmd39', this)">
+    Copy
+</button>
+
+</div>
+<h3>Understanding the for loop</h3>
+
+<div class="command-container">
+
+<pre><code>for angle in range(0, 361, 30):
+</code></pre>
+
+</div>
+
+<p>
+
+This means:
+
+</p>
+
+<ul>
+
+    <li>Start from 0°.</li>
+
+    <li>Stop at 360°.</li>
+
+    <li>Increase by 30° every iteration.</li>
+
+</ul>
+
+<p>
+
+Therefore, the loop will generate:
+
+</p>
+
+<div class="command-container">
+
+<pre><code>0°, 30°, 60°, 90°, 120° ...
+
+... 300°, 330°, 360°
+</code></pre>
+
+</div>
+<h3>Expected Output</h3>
+
+<div class="command-container">
+
+<pre><code>Angle:   0°  ->  x = 5.00, y = 0.00
+
+Angle:  30°  ->  x = 4.33, y = 2.50
+
+Angle:  60°  ->  x = 2.50, y = 4.33
+
+Angle:  90°  ->  x = 0.00, y = 5.00
+
+...
+
+Angle: 360°  ->  x = 5.00, y = 0.00
+</code></pre>
+
+</div>
+<h3>Why do we need many points?</h3>
+
+<div class="explanation-box">
+
+    <p>
+
+        A circle cannot be represented by only four points.
+
+    </p>
+
+    <ul>
+
+        <li>More points produce a smoother circle.</li>
+
+        <li>Fewer points produce a polygon.</li>
+
+        <li>The drone follows one waypoint after another.</li>
+
+    </ul>
+
+</div>
+<h3>🔬 Experiment</h3>
+
+<div class="explanation-box">
+
+    <p>
+
+        Change the following line:
+
+    </p>
+
+</div>
+
+<div class="command-container">
+
+<pre><code>for angle in range(0, 361, 30):
+</code></pre>
+
+</div>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>Try 60.</li>
+
+        <li>Try 45.</li>
+
+        <li>Try 10.</li>
+
+        <li>Observe how the number of points changes.</li>
+
+    </ul>
+
+</div>
+
+<h3>🎯 Challenge for the Reader</h3>
+
+<div class="explanation-box">
+
+    <p>
+
+        If the radius is changed from:
+
+    </p>
+
+</div>
+
+<div class="command-container">
+
+<pre><code>radius = 5
+</code></pre>
+
+</div>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>What happens if the radius becomes 10?</li>
+
+        <li>What happens if the radius becomes 2?</li>
+
+        <li>Will the shape remain circular?</li>
+
+    </ul>
+
+</div>
+<h3>📝 Notes</h3>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>
+
+            A circle is created by many small waypoints.
+
+        </li>
+
+        <li>
+
+            More waypoints produce smoother motion.
+
+        </li>
+
+        <li>
+
+            The Python <code>math</code> module calculates these coordinates.
+
+        </li>
+
+        <li>
+
+            In the next chapter, these points will be sent to the drone through MAVSDK.
+
+        </li>
+
+    </ul>
+
+</div>
+<h2>16. Sending Position Setpoints to the Drone</h2>
+
+<p>
+
+Until now, our drone only moved vertically.
+
+To follow trajectories such as squares, circles, and swarm formations, we must
+tell the drone where to go.
+
+Such target locations are called <b>setpoints</b>.
+
+</p>
+
+<div class="workflow">
+
+Python Program
+
+<br>⬇<br>
+
+Compute coordinates
+
+<br>⬇<br>
+
+Send setpoint
+
+<br>⬇<br>
+
+PX4
+
+<br>⬇<br>
+
+Drone movement
+
+</div>
+<h3>What is a setpoint?</h3>
+
+<p>
+
+A setpoint is simply a desired position.
+
+For example:
+
+</p>
+
+<div class="command-container">
+
+<pre><code>x = 5
+
+y = 3
+
+z = -2
+</code></pre>
+
+<button class="copy-btn"
+    onclick="copyCode('cmd40', this)">
+    Copy
+</button>
+
+</div>
+
+<p>
+
+This means:
+
+</p>
+
+<ul>
+
+    <li>Move 5 meters forward.</li>
+
+    <li>Move 3 meters to the right.</li>
+
+    <li>Fly 2 meters above the ground.</li>
+
+</ul>
+<h3>⚠️ Why is altitude negative?</h3>
+
+<div class="explanation-box">
+
+    <p>
+
+        PX4 internally uses the NED coordinate system:
+
+    </p>
+
+    <ul>
+
+        <li>X → North</li>
+
+        <li>Y → East</li>
+
+        <li>Z → Down</li>
+
+    </ul>
+
+</div>
+
+<p>
+
+Because the Z-axis points downward, altitude values are negative.
+
+</p>
+
+<div class="command-container">
+
+<pre><code>z = -2
+</code></pre>
+
+<button class="copy-btn"
+    onclick="copyCode('cmd41', this)">
+    Copy
+</button>
+
+</div>
+
+<p>
+
+means:
+
+</p>
+
+<p>
+
+<b>Fly 2 meters upward.</b>
+
+</p>
+<h3>The command used to send a setpoint</h3>
+
+<div class="command-container">
+
+<pre id="cmd42"><code>await drone.offboard.set_position_ned(
+    PositionNedYaw(
+        5.0,
+        0.0,
+        -2.0,
+        0.0
+    )
+)
+</code></pre>
+
+<button class="copy-btn"
+    onclick="copyCode('cmd42', this)">
+    Copy
+</button>
+
+</div>
+<h3>Understanding PositionNedYaw</h3>
+
+<table>
+
+<tr>
+
+    <th>Parameter</th>
+
+    <th>Meaning</th>
+
+</tr>
+
+<tr>
+
+    <td>5.0</td>
+
+    <td>X coordinate</td>
+
+</tr>
+
+<tr>
+
+    <td>0.0</td>
+
+    <td>Y coordinate</td>
+
+</tr>
+
+<tr>
+
+    <td>-2.0</td>
+
+    <td>Altitude</td>
+
+</tr>
+
+<tr>
+
+    <td>0.0</td>
+
+    <td>Yaw angle</td>
+
+</tr>
+
+</table>
+<h3>What is Offboard mode?</h3>
+
+<p>
+
+So far, PX4 has been making all navigation decisions.
+
+In Offboard mode, an external computer (our Python program) sends navigation
+commands continuously.
+
+</p>
+
+<div class="workflow">
+
+Python Script
+
+<br>⬇<br>
+
+MAVSDK
+
+<br>⬇<br>
+
+MAVLink
+
+<br>⬇<br>
+
+PX4 Offboard Mode
+
+<br>⬇<br>
+
+Drone
+
+</div>
+<h3>⚠️ Important Warning</h3>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>
+
+            Offboard mode requires continuous commands.
+
+        </li>
+
+        <li>
+
+            If commands stop, PX4 exits Offboard mode.
+
+        </li>
+
+        <li>
+
+            A real drone may trigger failsafe actions.
+
+        </li>
+
+        <li>
+
+            For now, we will only learn the concept.
+
+        </li>
+
+    </ul>
+
+</div>
+<h3>📝 Notes</h3>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>
+
+            A setpoint is a target position.
+
+        </li>
+
+        <li>
+
+            PX4 uses the NED coordinate system.
+
+        </li>
+
+        <li>
+
+            Negative Z means upward motion.
+
+        </li>
+
+        <li>
+
+            Offboard mode allows Python to control the drone.
+
+        </li>
+
+        <li>
+
+            Circular trajectories are implemented by continuously updating these setpoints.
+
+        </li>
+
+    </ul>
+
+</div>
+<h2>17. Starting Offboard Mode Safely</h2>
+
+<p>
+
+In the previous chapter, we learned that Offboard mode allows an external
+computer to control the drone.
+
+However, PX4 does not allow Offboard mode to start immediately.
+
+Before entering Offboard mode, we must first send at least one setpoint.
+
+</p>
+
+<div class="workflow">
+
+Connect
+
+<br>⬇<br>
+
+Arm
+
+<br>⬇<br>
+
+Send initial setpoint
+
+<br>⬇<br>
+
+Start Offboard mode
+
+<br>⬇<br>
+
+Send new setpoints continuously
+
+</div>
+<h3>Importing the Required Modules</h3>
+
+<p>
+
+Add the following import at the top of your Python file:
+
+</p>
+
+<div class="command-container">
+
+<pre id="cmd43"><code>from mavsdk.offboard import (
+    PositionNedYaw,
+    OffboardError
+)
+</code></pre>
+
+<button class="copy-btn"
+    onclick="copyCode('cmd43', this)">
+    Copy
+</button>
+
+</div>
+<h3>Understanding PositionNedYaw</h3>
+
+<div class="explanation-box">
+
+    <p>
+
+        <code>PositionNedYaw</code> stores:
+
+    </p>
+
+    <ul>
+
+        <li>X position</li>
+
+        <li>Y position</li>
+
+        <li>Z position</li>
+
+        <li>Yaw angle</li>
+
+    </ul>
+
+</div>
+
+<div class="command-container">
+
+<pre><code>PositionNedYaw(
+    0.0,
+    0.0,
+    -2.0,
+    0.0
+)
+</code></pre>
+
+</div>
+
+<p>
+
+This means:
+
+</p>
+
+<ul>
+
+    <li>Stay at the current X position.</li>
+
+    <li>Stay at the current Y position.</li>
+
+    <li>Fly 2 meters above the ground.</li>
+
+    <li>Keep the same orientation.</li>
+
+</ul>
+<h3>Why is an Initial Setpoint Necessary?</h3>
+
+<p>
+
+Imagine that PX4 suddenly receives the command:
+
+</p>
+
+<div class="command-container">
+
+<pre><code>await drone.offboard.start()
+</code></pre>
+
+</div>
+
+<p>
+
+without knowing where the drone should go.
+
+PX4 would have no target position.
+
+Therefore, PX4 requires us to send at least one setpoint before enabling
+Offboard mode.
+
+</p>
+<h3>Sending the Initial Setpoint</h3>
+
+<div class="command-container">
+
+<pre id="cmd44"><code>await drone.offboard.set_position_ned(
+
+    PositionNedYaw(
+
+        0.0,
+
+        0.0,
+
+        -2.0,
+
+        0.0
+
+    )
+
+)
+</code></pre>
+
+<button class="copy-btn"
+    onclick="copyCode('cmd44', this)">
+    Copy
+</button>
+
+</div>
+<h3>Starting Offboard Mode</h3>
+
+<div class="command-container">
+
+<pre id="cmd45"><code>try:
+
+    await drone.offboard.start()
+
+    print(
+        "Offboard mode started."
+    )
+
+except OffboardError as error:
+
+    print(
+
+        f"Offboard mode failed: {error}"
+
+    )
+</code></pre>
+
+<button class="copy-btn"
+    onclick="copyCode('cmd45', this)">
+    Copy
+</button>
+
+</div>
+<h3>Error Handling in Python</h3>
+
+<p>
+
+Sometimes commands fail.
+
+Instead of crashing the entire program, Python allows us to catch errors.
+
+</p>
+
+<div class="workflow">
+
+Execute command
+
+<br>⬇<br>
+
+Success?
+
+<br>⬇<br>
+
+Yes → Continue
+
+<br>⬇<br>
+
+No → Handle the error
+
+</div>
+<h3>⚠️ Common Errors and Solutions</h3>
+<div class="explanation-box">
+
+    <p>
+
+        Error 1:
+
+    </p>
+
+</div>
+
+<div class="command-container">
+
+<pre><code>OffboardError:
+NO_SETPOINT_SET
+</code></pre>
+
+</div>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>
+
+            Cause: Offboard mode was started before sending a setpoint.
+
+        </li>
+
+        <li>
+
+            Solution: Call
+            <code>set_position_ned()</code>
+            before
+            <code>offboard.start()</code>.
+
+        </li>
+
+    </ul>
+
+</div>
+<div class="explanation-box">
+
+    <p>
+
+        Error 2:
+
+    </p>
+
+</div>
+
+<div class="command-container">
+
+<pre><code>Offboard mode failed
+</code></pre>
+
+</div>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>
+
+            Check whether the drone is armed.
+
+        </li>
+
+        <li>
+
+            Verify that PX4 is running.
+
+        </li>
+
+        <li>
+
+            Confirm that the MAVSDK connection is active.
+
+        </li>
+
+    </ul>
+
+</div>
+
+<h3>📝 Notes</h3>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>
+
+            Offboard mode allows Python to control the drone.
+
+        </li>
+
+        <li>
+
+            PX4 requires an initial setpoint.
+
+        </li>
+
+        <li>
+
+            Error handling prevents the program from crashing.
+
+        </li>
+
+        <li>
+
+            Circular trajectories will be implemented using continuously updated setpoints.
+
+        </li>
+
+    </ul>
+
+</div>
+<div class="explanation-box">
+
+    <p>
+
+        Warning:
+
+    </p>
+
+    <ul>
+
+        <li>This chapter uses Offboard mode.</li>
+
+        <li>Always test in simulation first.</li>
+
+        <li>Do not run this code on a real drone without supervision.</li>
+
+    </ul>
+
+</div>
+<h2>18. Flying the Drone in a Circle</h2>
+
+<p>
+
+In the previous chapters, we learned:
+
+</p>
+
+<ul>
+
+    <li>How to calculate points on a circle.</li>
+
+    <li>How to use the math module.</li>
+
+    <li>How to send position setpoints.</li>
+
+    <li>How to start Offboard mode safely.</li>
+
+</ul>
+
+<p>
+
+Now we will combine all these concepts and make the drone fly in a circular trajectory.
+
+</p>
+
+<div class="workflow">
+
+Take off
+
+<br>⬇<br>
+
+Start Offboard mode
+
+<br>⬇<br>
+
+Compute x and y
+
+<br>⬇<br>
+
+Send waypoint
+
+<br>⬇<br>
+
+Increase angle
+
+<br>⬇<br>
+
+Repeat
+
+<br>⬇<br>
+
+Land
+
+</div>
+<h3>Step 1: Create the Python file</h3>
+
+<div class="command-container">
+
+<pre id="cmd46"><code>touch circle_flight.py</code></pre>
+
+<button class="copy-btn"
+onclick="copyCode('cmd46', this)">
+Copy
+</button>
+
+</div>
+
+<div class="command-container">
+
+<pre id="cmd47"><code>code circle_flight.py</code></pre>
+
+<button class="copy-btn"
+onclick="copyCode('cmd47', this)">
+Copy
+</button>
+
+</div>
+<h3>Step 2: The circular trajectory program</h3>
+
+<div class="command-container">
+
+<pre id="cmd48"><code>import asyncio
+import math
+
+from mavsdk import System
+
+from mavsdk.offboard import (
+    PositionNedYaw,
+    OffboardError
+)
+
+
+RADIUS = 60.0
+
+ALTITUDE = -2.0
+
+STEP = 2
+
+
+async def main():
+
+    drone = System()
+
+    await drone.connect(
+        system_address="udpin://0.0.0.0:14540"
+    )
+
+    print("Waiting for connection...")
+
+    async for state in drone.core.connection_state():
+
+        if state.is_connected:
+
+            print("Connected!")
+
+            break
+
+    print("Waiting for health checks...")
+
+    async for health in drone.telemetry.health():
+
+        if (
+            health.is_global_position_ok
+            and
+            health.is_home_position_ok
+        ):
+
+            print("Drone is ready.")
+
+            break
+
+    print("Arming...")
+
+    await drone.action.arm()
+
+    print("Sending initial setpoint...")
+
+    await drone.offboard.set_position_ned(
+
+        PositionNedYaw(
+            0.0,
+            0.0,
+            ALTITUDE,
+            0.0
+        )
+
+    )
+
+    print("Starting Offboard mode...")
+
+    try:
+
+        await drone.offboard.start()
+
+    except OffboardError as error:
+
+        print(
+            f"Offboard failed: {error}"
+        )
+
+        return
+
+    print("Flying in a circle...")
+
+    for angle in range(
+        0,
+        361,
+        STEP
+    ):
+
+        theta = math.radians(
+            angle
+        )
+
+        x = RADIUS * math.cos(
+            theta
+        )
+
+        y = RADIUS * math.sin(
+            theta
+        )
+
+        print(
+            f"x={x:.2f}, "
+            f"y={y:.2f}"
+        )
+
+        await drone.offboard.set_position_ned(
+
+            PositionNedYaw(
+
+                x,
+
+                y,
+
+                ALTITUDE,
+
+                angle
+
+            )
+
+        )
+
+        await asyncio.sleep(
+            0.5
+        )
+
+    print("Stopping Offboard mode...")
+
+    await drone.offboard.stop()
+
+    print("Landing...")
+
+    await drone.action.land()
+
+
+if __name__ == "__main__":
+
+    asyncio.run(main())
+</code></pre>
+
+<button class="copy-btn"
+onclick="copyCode('cmd48', this)">
+Copy
+</button>
+
+</div>
+<h3>Understanding the parameters</h3>
+
+<table>
+
+<tr>
+
+<th>Variable</th>
+
+<th>Meaning</th>
+
+</tr>
+
+<tr>
+
+<td>RADIUS</td>
+
+<td>Radius of the circle</td>
+
+</tr>
+
+<tr>
+
+<td>ALTITUDE</td>
+
+<td>Flight height</td>
+
+</tr>
+
+<tr>
+
+<td>STEP</td>
+
+<td>Angular increment</td>
+
+</tr>
+
+</table>
+<h3>What does STEP control?</h3>
+
+<div class="command-container">
+
+<pre><code>STEP = 2
+</code></pre>
+
+</div>
+
+<div class="explanation-box">
+
+<ul>
+
+<li>Smaller STEP → smoother circle.</li>
+
+<li>Larger STEP → polygon-like motion.</li>
+
+<li>More points → more computations.</li>
+
+</ul>
+
+</div>
+<h3>⚠️ Common Errors and Solutions</h3>
+<div class="explanation-box">
+
+<p>
+
+Error:
+
+</p>
+
+</div>
+
+<div class="command-container">
+
+<pre><code>Offboard failed
+</code></pre>
+
+</div>
+
+<div class="explanation-box">
+
+<ul>
+
+<li>PX4 simulation is not running.</li>
+
+<li>The drone was not armed.</li>
+
+<li>The MAVSDK connection failed.</li>
+
+</ul>
+
+</div>
+<div class="explanation-box">
+
+<p>
+
+Error:
+
+</p>
+
+</div>
+
+<div class="command-container">
+
+<pre><code>The drone moves strangely.
+</code></pre>
+
+</div>
+
+<div class="explanation-box">
+
+<ul>
+
+<li>The coordinate system may be misunderstood.</li>
+
+<li>The radius may be too large.</li>
+
+<li>The sleep time may be too small.</li>
+
+</ul>
+
+</div>
+<div class="explanation-box">
+
+<p>
+
+Error:
+
+</p>
+
+</div>
+
+<div class="command-container">
+
+<pre><code>ImportError:
+No module named mavsdk.offboard
+</code></pre>
+
+</div>
+
+<div class="explanation-box">
+
+<ul>
+
+<li>Check whether MAVSDK is installed in the virtual environment.</li>
+
+<li>Activate the venv before running the program.</li>
+
+</ul>
+
+</div>
+
+<h3>📝 Notes</h3>
+
+<div class="explanation-box">
+
+<ul>
+
+<li>A circle is simply many waypoints.</li>
+
+<li>The drone follows each waypoint one by one.</li>
+
+<li>The trajectory is generated using trigonometry.</li>
+
+<li>This is the foundation of swarm flight and formation control.</li>
+
+</ul>
+
+</div>
+
+<h2>19. Visualizing the Trajectory in Gazebo</h2>
+
+<p>
+
+When the drone follows the circular trajectory, we may also want to display its path inside Gazebo.
+
+A trajectory line helps us verify that the drone is moving correctly.
+
+</p>
+
+<div class="workflow">
+
+Drone Position
+
+<br>⬇<br>
+
+Read coordinates
+
+<br>⬇<br>
+
+Store points
+
+<br>⬇<br>
+
+Draw line
+
+<br>⬇<br>
+
+Display trajectory
+
+</div>
+
+<h3>Expected Result</h3>
+
+<div class="architecture-box">
+
+           ● ● ● ●
+
+       ●             ●
+
+     ●                 ●
+
+     ●       Drone     ●
+
+       ●             ●
+
+           ● ● ● ●
+
+</div>
+
+<div class="explanation-box">
+
+    <p>
+
+        In the final simulation, a red line should appear behind the drone and trace its path.
+
+    </p>
+
+</div>
+
+<h3>Possible Methods</h3>
+
+<table>
+
+<tr>
+
+    <th>Method</th>
+
+    <th>Difficulty</th>
+
+</tr>
+
+<tr>
+
+    <td>Gazebo marker plugin</td>
+
+    <td>Intermediate</td>
+
+</tr>
+
+<tr>
+
+    <td>ROS Marker messages</td>
+
+    <td>Intermediate</td>
+
+</tr>
+
+<tr>
+
+    <td>Custom Gazebo plugin</td>
+
+    <td>Advanced</td>
+
+</tr>
+
+</table>
+
+<h3>Notes</h3>
+
+<div class="explanation-box">
+
+    <ul>
+
+        <li>The trajectory line is only for visualization.</li>
+
+        <li>It does not affect the drone's flight.</li>
+
+        <li>The drone can follow the circle even without the red line.</li>
+
+    </ul>
+
+</div>
+<div class="explanation-box">
+
+    <p>
+
+        Simulator used in this project:
+
+    </p>
+
+    <ul>
+
+        <li>Gazebo Sim 8.14.0 (Gazebo Harmonic)</li>
+
+        <li>Ubuntu 24.04</li>
+
+        <li>PX4 SITL</li>
+
+        <li>MAVSDK Python API</li>
+
+    </ul>
+
+</div>
+<h2>19. Easy Trajectory Visualization Using Python</h2>
+
+<p>
+
+Instead of using ROS markers, we can save the drone positions in a file and
+draw the trajectory later using Python.
+
+This method is simple and beginner-friendly.
+
+</p>
+
+<div class="workflow">
+
+Drone flies
+
+<br>⬇<br>
+
+Save coordinates
+
+<br>⬇<br>
+
+Store in file
+
+<br>⬇<br>
+
+Plot trajectory
+
+</div>
+
 
 
         </div> 
