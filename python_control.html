@@ -1305,59 +1305,7 @@ relative_altitude_m=0.00
 </code></pre>
 
 </div>
-<h3>Why does telemetry work even when the drone is on the ground?</h3>
 
-<div class="explanation-box">
-
-    <p>
-
-        During this project, a common question was:
-
-    </p>
-
-    <ul>
-
-        <li>
-
-            "How is telemetry data available if the drone is not flying?"
-
-        </li>
-
-    </ul>
-
-</div>
-
-<p>
-
-The answer is simple.
-
-The drone does not need to fly in order to send telemetry data.
-
-As soon as PX4 starts, its sensors begin transmitting information continuously.
-
-</p>
-
-<div class="workflow">
-
-GPS Sensor
-
-<br>⬇<br>
-
-PX4
-
-<br>⬇<br>
-
-MAVLink
-
-<br>⬇<br>
-
-MAVSDK
-
-<br>⬇<br>
-
-Python Program
-
-</div>
 <h3>Why does telemetry work even when the drone is on the ground?</h3>
 
 <div class="explanation-box">
@@ -3099,37 +3047,7 @@ Compute y-coordinate
 Send waypoint to drone
 
 </div>
-<h3>Importing the math module</h3>
 
-<div class="command-container">
-
-<pre id="cmd34"><code>import math
-</code></pre>
-
-<button class="copy-btn"
-    onclick="copyCode('cmd34', this)">
-    Copy
-</button>
-
-</div>
-
-<p>
-
-The <code>math</code> module gives us access to functions such as:
-
-</p>
-
-<ul>
-
-    <li><code>math.sin()</code></li>
-
-    <li><code>math.cos()</code></li>
-
-    <li><code>math.pi</code></li>
-
-    <li><code>math.radians()</code></li>
-
-</ul>
 <h3>Importing the math module</h3>
 
 <div class="command-container">
